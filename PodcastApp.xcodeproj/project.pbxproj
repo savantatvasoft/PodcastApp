@@ -11,20 +11,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		FB02FFA92F027D61001D09A4 /* Exceptions for "PodcastApp" folder in "PodcastApp" target */ = {
+		FB02FFD42F027D8C001D09A4 /* Exceptions for "PodcastApp" folder in "PodcastApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = FB02FF962F027D5F001D09A4 /* PodcastApp */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		FB02FF992F027D5F001D09A4 /* PodcastApp */ = {
+		FB02FFCC2F027D8C001D09A4 /* PodcastApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				FB02FFA92F027D61001D09A4 /* Exceptions for "PodcastApp" folder in "PodcastApp" target */,
+				FB02FFD42F027D8C001D09A4 /* Exceptions for "PodcastApp" folder in "PodcastApp" target */,
 			);
 			path = PodcastApp;
 			sourceTree = "<group>";
@@ -45,7 +45,7 @@
 		FB02FF8E2F027D5F001D09A4 = {
 			isa = PBXGroup;
 			children = (
-				FB02FF992F027D5F001D09A4 /* PodcastApp */,
+				FB02FFCC2F027D8C001D09A4 /* PodcastApp */,
 				FB02FF982F027D5F001D09A4 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,7 +74,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				FB02FF992F027D5F001D09A4 /* PodcastApp */,
+				FB02FFCC2F027D8C001D09A4 /* PodcastApp */,
 			);
 			name = PodcastApp;
 			packageProductDependencies = (
@@ -147,10 +147,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CRTHLKVC56;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PodcastApp/Info.plist;
+				INFOPLIST_FILE = PodcastApp/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = PodcastDiscovery;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -179,10 +179,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CRTHLKVC56;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PodcastApp/Info.plist;
+				INFOPLIST_FILE = PodcastApp/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIMainStoryboardFile = PodcastDiscovery;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
