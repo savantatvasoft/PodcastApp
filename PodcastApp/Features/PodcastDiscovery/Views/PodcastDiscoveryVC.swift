@@ -9,6 +9,7 @@ import UIKit
 
 class PodcastDiscoveryVC: UIViewController {
 
+    @IBOutlet weak var searchbarView: SearchBarView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
