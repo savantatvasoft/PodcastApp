@@ -101,9 +101,10 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="Z2H-yx-jV1" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="7EA-am-2ID"/>
+                <constraint firstItem="Z2H-yx-jV1" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="7EA-am-2ID"/>
                 <constraint firstAttribute="bottom" secondItem="Z2H-yx-jV1" secondAttribute="bottom" id="EZB-jW-hGQ"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Z2H-yx-jV1" secondAttribute="trailing" id="YMi-6w-qvA"/>
+                <constraint firstAttribute="trailing" secondItem="Z2H-yx-jV1" secondAttribute="trailing" id="YMi-6w-qvA"/>
+                <constraint firstItem="Z2H-yx-jV1" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="d9x-1y-Jxo"/>
                 <constraint firstItem="Z2H-yx-jV1" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="rZR-b1-mZZ"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

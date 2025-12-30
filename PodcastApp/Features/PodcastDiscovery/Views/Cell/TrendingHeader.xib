@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="U6b-Vx-4bR" customClass="TrendingHeader" customModule="PodcastApp" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0pn-fs-q7D">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trending Post" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6Q-gw-7gm">
+                            <rect key="frame" x="0.0" y="11.333333333333334" width="125" height="27.333333333333329"/>
+                            <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ewd-u9-4P6">
+                            <rect key="frame" x="278" y="9" width="42" height="32"/>
+                            <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="14"/>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" title="See all">
+                                <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Ewd-u9-4P6" secondAttribute="trailing" id="4Zn-nx-YN5"/>
+                        <constraint firstItem="Ewd-u9-4P6" firstAttribute="centerY" secondItem="0pn-fs-q7D" secondAttribute="centerY" id="Ttg-eK-jKA"/>
+                        <constraint firstItem="y6Q-gw-7gm" firstAttribute="leading" secondItem="0pn-fs-q7D" secondAttribute="leading" id="Vbb-Eh-Gia"/>
+                        <constraint firstItem="y6Q-gw-7gm" firstAttribute="centerY" secondItem="0pn-fs-q7D" secondAttribute="centerY" id="pGY-cE-HH5"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="VXr-Tz-HHm"/>
+            <constraints>
+                <constraint firstItem="0pn-fs-q7D" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="2VC-hk-o1u"/>
+                <constraint firstAttribute="bottom" secondItem="0pn-fs-q7D" secondAttribute="bottom" id="SML-c4-0VV"/>
+                <constraint firstItem="0pn-fs-q7D" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="WwN-jc-8ik"/>
+                <constraint firstAttribute="trailing" secondItem="0pn-fs-q7D" secondAttribute="trailing" id="nDt-0l-P1U"/>
+            </constraints>
+            <connections>
+                <outlet property="title" destination="y6Q-gw-7gm" id="tM0-wj-aob"/>
+            </connections>
+            <point key="canvasLocation" x="31" y="111"/>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

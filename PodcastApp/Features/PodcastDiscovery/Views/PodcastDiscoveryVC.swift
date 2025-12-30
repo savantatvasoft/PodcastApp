@@ -19,8 +19,22 @@ class PodcastDiscoveryVC: UIViewController {
         super.viewDidLoad()
         setupCollectionView()
     }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        coordinator.animate(alongsideTransition: { _ in
+            // This forces the layout factory to re-calculate
+            // the widths based on the new landscape/portrait size
+            self.collectionView.collectionViewLayout.invalidateLayout()
+        }, completion: nil)
+    }
 
     private func setupCollectionView() {
+        let headerNib = UINib(nibName: "TrendingHeader", bundle: nil)
+        collectionView.register(headerNib,
+                                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                    withReuseIdentifier: "TrendingHeader")
         collectionView.setCollectionViewLayout(PodcastLayoutFactory.createDiscoveryLayout(), animated: false)
     }
     
@@ -39,6 +53,18 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return provideCell(for: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        guard let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: TrendingHeader.reuseIdentifier,
+            for: indexPath
+        ) as? TrendingHeader else {
+            return UICollectionReusableView()
+        }        
+        return header
     }
 }
 

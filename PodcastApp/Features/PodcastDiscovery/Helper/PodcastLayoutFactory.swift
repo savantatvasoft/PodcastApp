@@ -32,7 +32,8 @@ struct PodcastLayoutFactory {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         section.interGroupSpacing = 20
-        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 0, trailing: 16)
+        section.contentInsetsReference = .none
+        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 8, bottom: 0, trailing: 8)
         return section
     }
     
@@ -41,17 +42,18 @@ struct PodcastLayoutFactory {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.4),
-                                               heightDimension: .absolute(160))
+        let isLandscape = UIScreen.main.bounds.width > UIScreen.main.bounds.height
+        let widthFactor: CGFloat = isLandscape ? 0.25 : 0.4
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(widthFactor),
+                                               heightDimension: .absolute(170))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
-        // 3. Section: Scrolls horizontally
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         
-        // 4. Header
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                 heightDimension: .absolute(50))
         let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
@@ -60,7 +62,8 @@ struct PodcastLayoutFactory {
             alignment: .top
         )
         section.boundarySupplementaryItems = [headerItem]
-        
+        section.contentInsetsReference = .none
+        section.interGroupSpacing = 10
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
         return section
     }
