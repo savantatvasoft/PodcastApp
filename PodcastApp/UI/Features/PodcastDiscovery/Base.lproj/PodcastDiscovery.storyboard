@@ -246,11 +246,52 @@
                     <navigationItem key="navigationItem" id="8LW-If-Dns"/>
                     <connections>
                         <outlet property="collectionView" destination="MGF-lN-T8t" id="jl1-DX-gEG"/>
+                        <segue destination="2Mx-dI-wrP" kind="presentation" identifier="showPodcastList" modalPresentationStyle="pageSheet" id="hJj-S2-GST"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2293.8931297709923" y="-544.36619718309862"/>
+        </scene>
+        <!--Podcast ListVC-->
+        <scene sceneID="NQQ-MR-Y2N">
+            <objects>
+                <viewController id="2Mx-dI-wrP" customClass="PodcastListVC" customModule="PodcastApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aGF-3Y-EmX">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q2x-3e-cNs">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="60"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUu-AV-P3g">
+                                        <rect key="frame" x="21" y="18" width="51" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="tintColor" systemColor="systemBlueColor"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="arrowshape.turn.up.left.fill" catalog="system"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="lp4-8L-x5M"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Z6D-3r-Ue4"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Q2x-3e-cNs" secondAttribute="trailing" id="X7F-yV-3JS"/>
+                            <constraint firstItem="Q2x-3e-cNs" firstAttribute="top" secondItem="aGF-3Y-EmX" secondAttribute="top" id="pYd-Z3-vVG"/>
+                            <constraint firstItem="Q2x-3e-cNs" firstAttribute="leading" secondItem="aGF-3Y-EmX" secondAttribute="leading" id="uij-r5-urs"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="SOF-Ui-GhJ"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ovZ-dL-PJQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3137" y="-512"/>
         </scene>
         <!--Home-->
         <scene sceneID="T8B-fM-KOX">
@@ -279,10 +320,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <color key="barTintColor" red="1" green="0.38338053599999999" blue="0.9414020541" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" systemColor="tintColor"/>
                         <color key="selectedImageTintColor" systemColor="systemRedColor"/>
-                        <tabBarAppearance key="standardAppearance">
-                            <color key="backgroundColor" systemColor="systemGreenColor"/>
+                        <tabBarAppearance key="standardAppearance" stackedItemPositioning="fill">
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </tabBarAppearance>
                     </tabBar>
                     <connections>
@@ -356,6 +397,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrowshape.turn.up.left.fill" catalog="system" width="128" height="104"/>
         <image name="brakesignal.dashed" catalog="system" width="128" height="87"/>
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
@@ -379,17 +421,23 @@
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemCyanColor">
             <color red="0.1960784314" green="0.67843137249999996" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
