@@ -17,9 +17,9 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0pn-fs-q7D">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trending Post" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6Q-gw-7gm">
-                            <rect key="frame" x="0.0" y="11.333333333333334" width="125" height="27.333333333333329"/>
-                            <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="20"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Trending Post" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6Q-gw-7gm">
+                            <rect key="frame" x="0.0" y="12.666666666666666" width="116.33333333333333" height="24.666666666666671"/>
+                            <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -30,6 +30,9 @@
                             <state key="normal" title="See all">
                                 <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
+                            <connections>
+                                <action selector="onPressLeft:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Pzr-2Q-SeM"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -49,6 +52,7 @@
                 <constraint firstAttribute="trailing" secondItem="0pn-fs-q7D" secondAttribute="trailing" id="nDt-0l-P1U"/>
             </constraints>
             <connections>
+                <outlet property="leftImageView" destination="Ewd-u9-4P6" id="Wz8-Fy-Abj"/>
                 <outlet property="title" destination="y6Q-gw-7gm" id="tM0-wj-aob"/>
             </connections>
             <point key="canvasLocation" x="31" y="111"/>

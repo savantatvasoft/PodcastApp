@@ -45,7 +45,7 @@ struct PodcastLayoutFactory {
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
         
         let isLandscape = UIScreen.main.bounds.width > UIScreen.main.bounds.height
-        let widthFactor: CGFloat = isLandscape ? 0.25 : 0.4
+        let widthFactor: CGFloat = isLandscape ? 0.2 : 0.33
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(widthFactor),
                                                heightDimension: .absolute(170))

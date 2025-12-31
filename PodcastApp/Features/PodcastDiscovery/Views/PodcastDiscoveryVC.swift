@@ -13,7 +13,17 @@ class PodcastDiscoveryVC: UIViewController {
     @IBOutlet weak var searchbarView: SearchBarView!
     
     private var selectedCategoryIndex = 0
-    private let categories = ["All", "Stories", "Motivation", "Education", "Health", "Tech"]
+    private let categories = CategoryType.allCases
+    
+    //Computed property to get data for Section 1
+    private var filteredPodcasts: [Podcast] {
+            let selectedType = categories[selectedCategoryIndex]
+            if selectedType == .all {
+                return MockData.allPodcasts
+            } else {
+                return MockData.allPodcasts.filter { $0.category == selectedType }
+            }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,8 +34,6 @@ class PodcastDiscoveryVC: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
         
         coordinator.animate(alongsideTransition: { _ in
-            // This forces the layout factory to re-calculate
-            // the widths based on the new landscape/portrait size
             self.collectionView.collectionViewLayout.invalidateLayout()
         }, completion: nil)
     }
@@ -40,6 +48,15 @@ class PodcastDiscoveryVC: UIViewController {
     
 }
 
+
+extension PodcastDiscoveryVC: TrendingHeaderDelegate {
+
+    func didTapTrendingHeaderLeft() {
+        performSegue(withIdentifier: "showPodcastList", sender: nil)
+    }
+    
+}
+
 // MARK: - UICollectionView DataSource
 extension PodcastDiscoveryVC: UICollectionViewDataSource {
 
@@ -48,7 +65,7 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? categories.count : 20
+        return section == 0 ? categories.count : filteredPodcasts.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -63,7 +80,9 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
             for: indexPath
         ) as? TrendingHeader else {
             return UICollectionReusableView()
-        }        
+        }
+        header.delegate = self
+        header.title.text = "Trending Podcast"
         return header
     }
 }
@@ -94,13 +113,16 @@ extension PodcastDiscoveryVC {
     
     private func configureCategoryCell(at indexPath: IndexPath) -> CategoryCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.reuseIdentifier, for: indexPath) as! CategoryCell
+        let category = categories[indexPath.item]
         let isSelected = (indexPath.item == selectedCategoryIndex)
-        cell.configure(text: categories[indexPath.item], isSelected: isSelected)
+        cell.configure(text: category.rawValue, isSelected: isSelected)
         return cell
     }
     
     private func configureTrendingCell(at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrendingCell.reuseIdentifier, for: indexPath) as! TrendingCell
+        let podcast = filteredPodcasts[indexPath.item]
+        cell.configure(with: podcast)
         return cell
     }
 }
@@ -126,11 +148,15 @@ extension PodcastDiscoveryVC {
         
         let oldIndexPath = IndexPath(item: previousIndex, section: 0)
         let newIndexPath = IndexPath(item: selectedCategoryIndex, section: 0)
-        
-        collectionView.reloadItems(at: [oldIndexPath, newIndexPath])
-        collectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: true)
-        
-        print("Category selected: \(categories[selectedCategoryIndex])")
+        collectionView.performBatchUpdates({
+            collectionView.reloadItems(at: [oldIndexPath, newIndexPath])
+            collectionView.reloadSections(IndexSet(integer: 1))
+        }, completion: { _ in
+            self.collectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: true)
+        })
+        UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
+
+        print("Category selected: \(categories[selectedCategoryIndex].rawValue)")
     }
     
     private func handleTrendingSelection(at indexPath: IndexPath) {
