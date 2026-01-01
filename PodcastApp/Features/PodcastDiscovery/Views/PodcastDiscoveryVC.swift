@@ -160,6 +160,9 @@ extension PodcastDiscoveryVC {
     }
     
     private func handleTrendingSelection(at indexPath: IndexPath) {
-        print("Trending podcast selected at index: \(indexPath.item)")
+        let selectedPodcast = MockData.allPodcasts[indexPath.item]
+        if let mainTabBar = self.tabBarController as? MainTabBarController {
+            mainTabBar.updateMiniPlayer(with: selectedPodcast)
+        }
     }
 }

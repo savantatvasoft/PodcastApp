@@ -395,10 +395,10 @@
             </objects>
             <point key="canvasLocation" x="683" y="-456"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Main Tab Bar Controller-->
         <scene sceneID="b0F-Cc-D28">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="9ah-Pa-SN6" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="9ah-Pa-SN6" customClass="MainTabBarController" customModule="PodcastApp" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="frI-u8-2cn">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
