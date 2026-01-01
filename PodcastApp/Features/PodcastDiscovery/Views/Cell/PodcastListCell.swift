@@ -1,29 +1,22 @@
 //
-//  TrendingCell.swift
+//  PodcastListCell.swift
 //  PodcastApp
 //
-//  Created by MACM72 on 30/12/25.
+//  Created by MACM72 on 01/01/26.
 //
 
 import UIKit
 
-class TrendingCell: UICollectionViewCell {
+class PodcastListCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "TrendingCell"
-    
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var conatinerView: UIView!
+    @IBOutlet weak var imgUrl: UIImageView!
     @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var language: UILabel!
+    @IBOutlet weak var authorName: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageView.image = nil
     }
     
     private func setupUI() {
@@ -32,14 +25,15 @@ class TrendingCell: UICollectionViewCell {
     }
     
     func configure(with podcast: Podcast) {
-            title.text = podcast.title
-            language.text = podcast.category.rawValue
+        title.text = podcast.title
+        authorName.text = podcast.author
+          
             if let url = URL(string: podcast.imageUrl) {
                 // Basic async loading (Consider using Kingfisher for better performance)
                 URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
                     if let data = data, let image = UIImage(data: data) {
                         DispatchQueue.main.async {
-                            self?.imageView.image = image
+                            self?.imgUrl.image = image
                         }
                     }
                 }.resume()
@@ -48,4 +42,5 @@ class TrendingCell: UICollectionViewCell {
             self.invalidateIntrinsicContentSize()
             self.layoutIfNeeded()
     }
+    
 }
