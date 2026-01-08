@@ -22,7 +22,7 @@
                             <rect key="frame" x="8" y="6.6666666666666643" width="50" height="47"/>
                             <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="50" id="lQr-qC-VDS"/>
+                                <constraint firstAttribute="width" secondItem="Lwd-be-iJi" secondAttribute="height" multiplier="1:1" id="AVn-gf-8Bd"/>
                                 <constraint firstAttribute="width" constant="50" id="yco-qq-9li"/>
                             </constraints>
                         </imageView>
@@ -30,7 +30,7 @@
                             <rect key="frame" x="329" y="20.666666666666664" width="24" height="18.666666666666664"/>
                             <color key="tintColor" systemColor="labelColor"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="24" id="dax-XB-bNK"/>
+                                <constraint firstAttribute="width" secondItem="Mrq-h5-JXm" secondAttribute="height" multiplier="1:1" id="4Du-rt-Uxm"/>
                                 <constraint firstAttribute="width" constant="24" id="kgN-sW-uyC"/>
                             </constraints>
                         </imageView>
@@ -38,8 +38,8 @@
                             <rect key="frame" x="293" y="20.333333333333329" width="24" height="19.666666666666671"/>
                             <color key="tintColor" name="Label"/>
                             <constraints>
+                                <constraint firstAttribute="width" secondItem="Y1Z-hU-OYd" secondAttribute="height" multiplier="1:1" id="BhH-7j-y97"/>
                                 <constraint firstAttribute="width" constant="24" id="VFr-OU-CY5"/>
-                                <constraint firstAttribute="height" constant="24" id="wqO-xs-ecq"/>
                             </constraints>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ese-Ls-ajL" userLabel="InformationView">

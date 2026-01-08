@@ -8,9 +8,9 @@
 import UIKit
 
 struct PodcastLayoutFactory {
-    
+
     static func createDiscoveryLayout() -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout { (sectionIndex, environment) -> NSCollectionLayoutSection? in
+        return UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
             switch sectionIndex {
             case 0:
                 return createCategorySection()
@@ -19,41 +19,33 @@ struct PodcastLayoutFactory {
             }
         }
     }
-    
+
     private static func createCategorySection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(50),
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
+
         let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(50),
-                                               heightDimension: .absolute(44))
+                                              heightDimension: .absolute(45))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
+
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         section.interGroupSpacing = 20
-        section.contentInsetsReference = .none
-        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 8, bottom: 0, trailing: 8)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 0, trailing: 8)
         return section
     }
-    
+
     private static func createTrendingSection() -> NSCollectionLayoutSection {
-        // 1. Item: Full size of the group
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-        
-        let isLandscape = UIScreen.main.bounds.width > UIScreen.main.bounds.height
-        let widthFactor: CGFloat = isLandscape ? 0.2 : 0.33
-        
+        let widthFactor = AppLayout.podcastWidthFactor
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(widthFactor),
-                                               heightDimension: .absolute(170))
+                                              heightDimension: .absolute(AppLayout.trendingSectionHeight))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
-        
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                 heightDimension: .absolute(50))
         let headerItem = NSCollectionLayoutBoundarySupplementaryItem(
@@ -62,9 +54,8 @@ struct PodcastLayoutFactory {
             alignment: .top
         )
         section.boundarySupplementaryItems = [headerItem]
-        section.contentInsetsReference = .none
         section.interGroupSpacing = 10
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 8)
         return section
     }
 }

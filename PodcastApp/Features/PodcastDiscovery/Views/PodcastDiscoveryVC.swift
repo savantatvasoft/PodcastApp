@@ -14,8 +14,6 @@ class PodcastDiscoveryVC: UIViewController {
     
     private var selectedCategoryIndex = 0
     private let categories = CategoryType.allCases
-    
-    //Computed property to get data for Section 1
     private var filteredPodcasts: [Podcast] {
             let selectedType = categories[selectedCategoryIndex]
             if selectedType == .all {
@@ -27,6 +25,7 @@ class PodcastDiscoveryVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupCollectionView()
     }
     
