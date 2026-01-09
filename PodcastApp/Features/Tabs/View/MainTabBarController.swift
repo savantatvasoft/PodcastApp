@@ -6,31 +6,35 @@
 //
 
 import UIKit
+import AVFoundation
+
+//AVPlayer → AudioPlayerManager → MainTabBarController → MiniPlayerView
 
 class MainTabBarController: UITabBarController {
 
-    var miniPlayer: MiniPlayerView?
-    var isPlaying = false
-    var currentIndex = 0
-    var podcasts: [Podcast] = MockData.allPodcasts
+    private var miniPlayer: MiniPlayerView?
+    private var currentIndex = 0
+    private var podcasts: [Podcast] = MockData.allPodcasts
+
+    private let audioManager = AudioPlayerManager.shared
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMiniPlayerUI()
+        bindPlayerState()
     }
+
+    // MARK: - Mini Player UI
 
     private func setupMiniPlayerUI() {
         let nib = UINib(nibName: "MiniPlayerView", bundle: nil)
-        
-        // Change 'withOwner: self' to 'withOwner: nil'
-        guard let player = nib.instantiate(withOwner: nil, options: nil).first as? MiniPlayerView else {
+        guard let player = nib.instantiate(withOwner: nil).first as? MiniPlayerView else {
             return
         }
-        
-        self.view.addSubview(player)
-        self.miniPlayer = player
-        
-        // Constraints...
+
+        view.addSubview(player)
+        miniPlayer = player
+
         player.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             player.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -38,39 +42,72 @@ class MainTabBarController: UITabBarController {
             player.heightAnchor.constraint(equalToConstant: 70),
             player.bottomAnchor.constraint(equalTo: tabBar.topAnchor)
         ])
-        
+
         player.isHidden = true
-        setupPlayerCallbacks()
+        setupMiniPlayerActions()
     }
-    
-    private func setupPlayerCallbacks() {
-           
+
+    // MARK: - Actions
+
+    private func setupMiniPlayerActions() {
+
         miniPlayer?.didTapPlay = { [weak self] in
-           guard let self = self else { return }
-           self.isPlaying.toggle()
-           let iconName = self.isPlaying ? "pause.fill" : "play.fill"
-           self.miniPlayer?.playView.image = UIImage(systemName: iconName)
+            guard let self else { return }
+
+            switch self.audioManager.isPlaying {
+            case true:
+                self.audioManager.pause()
+            case false:
+                self.audioManager.resume()
+            }
         }
 
         miniPlayer?.didTapNext = { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
+
             self.currentIndex = (self.currentIndex + 1) % self.podcasts.count
-            let nextPodcast = self.podcasts[self.currentIndex]
-            self.updateMiniPlayer(with: nextPodcast)
+            let podcast = self.podcasts[self.currentIndex]
+            self.audioManager.stop()
+            self.audioManager.play(podcast: podcast)
+            self.updateMiniPlayer(with: podcast)
         }
     }
 
+    // MARK: - Player State Binding (🔥 IMPORTANT)
+
+    private func bindPlayerState() {
+        audioManager.onStateChange = { [weak self] state in
+            guard let self, let miniPlayer else { return }
+
+            DispatchQueue.main.async {
+                switch state {
+                case .playing:
+                    miniPlayer.playView.image = UIImage(systemName: "pause.fill")
+
+                case .paused:
+                    miniPlayer.playView.image = UIImage(systemName: "play.fill")
+
+                case .waitingToPlayAtSpecifiedRate:
+                    miniPlayer.playView.image = UIImage(systemName: "hourglass")
+
+                @unknown default:
+                    break
+                }
+            }
+        }
+    }
+
+    // MARK: - External Entry Point
+
     func updateMiniPlayer(with podcast: Podcast) {
-        guard let player = miniPlayer else { return }
+        guard let miniPlayer else { return }
+
         if let index = podcasts.firstIndex(where: { $0.id == podcast.id }) {
-            self.currentIndex = index
+            currentIndex = index
         }
-        player.configure(with: podcast)
-        self.isPlaying = true
-        player.playView.image = UIImage(systemName: "pause.fill")
-        
-        if player.isHidden {
-            player.isHidden = false
-        }
+
+        miniPlayer.configure(with: podcast)
+        miniPlayer.isHidden = false
+        audioManager.play(podcast: podcast)
     }
 }

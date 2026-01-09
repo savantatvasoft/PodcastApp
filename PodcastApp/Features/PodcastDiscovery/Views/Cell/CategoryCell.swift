@@ -31,8 +31,6 @@ class CategoryCell: UICollectionViewCell {
         title.textColor = isSelected ? .systemRed : .systemGray
      
         title.font = UIFont(name: "Avenir-Heavy", size: isSelected ? 15 : 16)
-       
-        // This ensures the cell adjusts its width immediately if the font width changed
         self.invalidateIntrinsicContentSize()
         self.layoutIfNeeded()
     }

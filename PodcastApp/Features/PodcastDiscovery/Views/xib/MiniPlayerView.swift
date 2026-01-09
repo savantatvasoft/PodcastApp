@@ -8,14 +8,15 @@
 import UIKit
 
 class MiniPlayerView: UIView {
+    
+    var isPlaying = false
 
     @IBOutlet weak var playView: UIImageView!
     @IBOutlet weak var nextSongView: UIImageView!
     @IBOutlet weak var songDescription: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var title: UILabel!
-    
-    // Callbacks for actions
+
     var didTapPlay: (() -> Void)?
     var didTapNext: (() -> Void)?
     
@@ -48,7 +49,6 @@ class MiniPlayerView: UIView {
         songDescription.text = podcast.author
 
         if let url = URL(string: podcast.imageUrl) {
-            // Basic async loading
             URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
                 if let data = data, let image = UIImage(data: data) {
                     DispatchQueue.main.async {

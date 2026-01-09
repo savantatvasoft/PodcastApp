@@ -11,15 +11,9 @@ class PodcastDiscoveryVC: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchbarView: SearchBarView!
-    
-    private var selectedCategoryIndex = 0
-    private let categories = CategoryType.allCases
-    private var filteredPodcasts: [Podcast] {
-        let selectedType = categories[selectedCategoryIndex]
-        let source = (selectedType == .all) ? MockData.allPodcasts : MockData.allPodcasts.filter { $0.category == selectedType }
-        return Array(source.prefix(5))
-    }
-    
+
+    private let vm = PodcastDiscoveryVM()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
@@ -60,7 +54,7 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? categories.count : filteredPodcasts.count
+        return section == 0 ? vm.categories.count : vm.filteredPodcasts.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -108,15 +102,15 @@ extension PodcastDiscoveryVC {
     
     private func configureCategoryCell(at indexPath: IndexPath) -> CategoryCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.reuseIdentifier, for: indexPath) as! CategoryCell
-        let category = categories[indexPath.item]
-        let isSelected = (indexPath.item == selectedCategoryIndex)
+        let category = vm.categories[indexPath.item]
+        let isSelected = (indexPath.item == vm.selectedCategoryIndex)
         cell.configure(text: category.rawValue, isSelected: isSelected)
         return cell
     }
     
     private func configureTrendingCell(at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrendingCell.reuseIdentifier, for: indexPath) as! TrendingCell
-        let podcast = filteredPodcasts[indexPath.item]
+        let podcast = vm.filteredPodcasts[indexPath.item]
         cell.configure(with: podcast)
         return cell
     }
@@ -138,11 +132,11 @@ extension PodcastDiscoveryVC {
     }
     
     private func handleCategorySelection(at indexPath: IndexPath) {
-        let previousIndex = selectedCategoryIndex
-        selectedCategoryIndex = indexPath.item
-        
+        let previousIndex = vm.selectedCategoryIndex
+        vm.selectedCategoryIndex = indexPath.item
+
         let oldIndexPath = IndexPath(item: previousIndex, section: 0)
-        let newIndexPath = IndexPath(item: selectedCategoryIndex, section: 0)
+        let newIndexPath = IndexPath(item: vm.selectedCategoryIndex, section: 0)
 
         collectionView.performBatchUpdates({
             collectionView.reloadItems(at: [oldIndexPath, newIndexPath])
@@ -152,12 +146,11 @@ extension PodcastDiscoveryVC {
         })
 
         UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
-
-        print("Category selected: \(categories[selectedCategoryIndex].rawValue)")
     }
     
     private func handleTrendingSelection(at indexPath: IndexPath) {
         let selectedPodcast = MockData.allPodcasts[indexPath.item]
+//        vm.didSelectPodcast(selectedPodcast, index: indexPath.item)
         if let mainTabBar = self.tabBarController as? MainTabBarController {
             mainTabBar.updateMiniPlayer(with: selectedPodcast)
         }

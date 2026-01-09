@@ -340,6 +340,7 @@
                                             <outlet property="authorName" destination="C3J-D7-HeE" id="Zxq-eX-hmy"/>
                                             <outlet property="conatinerView" destination="F3p-cY-6oP" id="O8N-rs-JrZ"/>
                                             <outlet property="imgUrl" destination="AcE-88-KDG" id="JOn-Fo-y08"/>
+                                            <outlet property="rightImage" destination="Kit-1F-2G5" id="gqR-55-D51"/>
                                             <outlet property="title" destination="MhL-sA-Nnm" id="xx5-5F-EpI"/>
                                         </connections>
                                     </collectionViewCell>

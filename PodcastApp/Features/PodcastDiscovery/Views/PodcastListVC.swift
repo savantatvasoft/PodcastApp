@@ -48,6 +48,6 @@ extension PodcastListVC: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 6 // Vertical spacing between cells
+        return 6
     }
 }

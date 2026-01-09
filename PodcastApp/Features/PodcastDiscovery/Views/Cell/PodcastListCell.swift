@@ -15,6 +15,8 @@ class PodcastListCell: UICollectionViewCell {
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var authorName: UILabel!
 
+    @IBOutlet weak var rightImage: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 

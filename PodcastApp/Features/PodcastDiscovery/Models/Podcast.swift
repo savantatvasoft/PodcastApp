@@ -7,8 +7,13 @@
 
 import Foundation
 
-import Foundation
+// Distinguish between the style of content
+enum ContentType: String, Codable {
+    case podcast = "Podcast"
+    case music = "Music"
+}
 
+// Category filter types
 enum CategoryType: String, CaseIterable, Codable {
     case all = "All"
     case stories = "Stories"
@@ -29,11 +34,14 @@ struct Podcast: Identifiable {
     let title: String
     let author: String
     let category: CategoryType
+    let contentType: ContentType
     let imageUrl: String
     let audioUrl: String
     let rating: Double
     let views: String
 }
+
+import Foundation
 
 struct MockData {
     static let categories: [PodcastCategory] = CategoryType.allCases.map {
@@ -41,27 +49,49 @@ struct MockData {
     }
 
     static let allPodcasts: [Podcast] = [
-        Podcast(id: "1", title: "The Tech Revolution", author: "Alex Rivera", category: .tech, imageUrl: "https://picsum.photos/seed/1/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.9, views: "1.2M"),
-        Podcast(id: "2", title: "Mindset Matters", author: "Sarah Chen", category: .motivation, imageUrl: "https://picsum.photos/seed/2/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", rating: 4.8, views: "850K"),
-        Podcast(id: "3", title: "History Unfolded", author: "James Miller", category: .stories, imageUrl: "https://picsum.photos/seed/3/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", rating: 4.7, views: "500K"),
-        Podcast(id: "4", title: "The Daily Story", author: "Emily Rose", category: .stories, imageUrl: "https://picsum.photos/seed/4/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", rating: 4.9, views: "2.1M"),
-        Podcast(id: "5", title: "Deep Meditation", author: "Zen Master", category: .health, imageUrl: "https://picsum.photos/seed/5/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", rating: 4.6, views: "120K"),
-        Podcast(id: "6", title: "Future AI", author: "Cyber Sarah", category: .tech, imageUrl: "https://picsum.photos/seed/6/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", rating: 4.8, views: "900K"),
-        Podcast(id: "7", title: "Startup Stories", author: "Silicon Sam", category: .education, imageUrl: "https://picsum.photos/seed/7/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3", rating: 4.5, views: "300K"),
-        Podcast(id: "8", title: "Yoga Vibes", author: "Adriene", category: .health, imageUrl: "https://picsum.photos/seed/8/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3", rating: 4.9, views: "1.5M"),
-        Podcast(id: "9", title: "Indie Beats", author: "DJ Echo", category: .music, imageUrl: "https://picsum.photos/seed/9/400/400", audioUrl: "https://opensource.adobe.com/dc-neue-assets/samples/quiz2.mp3", rating: 4.7, views: "450K"),
-        Podcast(id: "10", title: "Business Daily", author: "John Galt", category: .education, imageUrl: "https://picsum.photos/seed/10/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3", rating: 4.4, views: "200K"),
-        Podcast(id: "11", title: "Space Odyssey", author: "Astro Ben", category: .education, imageUrl: "https://picsum.photos/seed/11/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.8, views: "700K"),
-        Podcast(id: "12", title: "The Horror Hour", author: "Night Owl", category: .stories, imageUrl: "https://picsum.photos/seed/12/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", rating: 4.9, views: "3.2M"),
-        Podcast(id: "13", title: "Coding Life", author: "Dev Dan", category: .tech, imageUrl: "https://picsum.photos/seed/13/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", rating: 4.6, views: "150K"),
-        Podcast(id: "14", title: "Healthy Eating", author: "Chef Nutri", category: .health, imageUrl: "https://picsum.photos/seed/14/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", rating: 4.5, views: "400K"),
-        Podcast(id: "15", title: "Marketing 101", author: "Ad Guru", category: .education, imageUrl: "https://picsum.photos/seed/15/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", rating: 4.3, views: "90K"),
-        Podcast(id: "16", title: "Jazz Lounge", author: "Smooth Sax", category: .music, imageUrl: "https://picsum.photos/seed/16/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", rating: 4.7, views: "250K"),
-        Podcast(id: "17", title: "Crime Scene", author: "Agent Mulder", category: .stories, imageUrl: "https://picsum.photos/seed/17/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3", rating: 4.9, views: "2.8M"),
-        Podcast(id: "18", title: "Physics Fun", author: "Prof. Proton", category: .education, imageUrl: "https://picsum.photos/seed/18/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3", rating: 4.8, views: "550K"),
-        Podcast(id: "19", title: "Gadget Talk", author: "Tech Tom", category: .tech, imageUrl: "https://picsum.photos/seed/19/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3", rating: 4.7, views: "600K"),
-        Podcast(id: "20", title: "Zen Living", author: "Peaceful Pat", category: .health, imageUrl: "https://picsum.photos/seed/20/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.6, views: "180K")
+        // --- TECH ---
+        Podcast(id: "1", title: "The Tech Revolution", author: "Alex Rivera", category: .tech, contentType: .podcast, imageUrl: "https://picsum.photos/seed/1/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.9, views: "1.2M"),
+        Podcast(id: "6", title: "Future AI", author: "Cyber Sarah", category: .tech, contentType: .podcast, imageUrl: "https://picsum.photos/seed/6/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", rating: 4.8, views: "900K"),
+        Podcast(id: "13", title: "Coding Life", author: "Dev Dan", category: .tech, contentType: .podcast, imageUrl: "https://picsum.photos/seed/13/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", rating: 4.6, views: "150K"),
+        Podcast(id: "19", title: "Gadget Talk", author: "Tech Tom", category: .tech, contentType: .podcast, imageUrl: "https://picsum.photos/seed/19/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3", rating: 4.7, views: "600K"),
+
+        // --- MOTIVATION ---
+        Podcast(id: "2", title: "Mindset Matters", author: "Sarah Chen", category: .motivation, contentType: .podcast, imageUrl: "https://picsum.photos/seed/2/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", rating: 4.8, views: "850K"),
+        Podcast(id: "21", title: "The Grustle", author: "Marcus Bold", category: .motivation, contentType: .podcast, imageUrl: "https://picsum.photos/seed/21/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.9, views: "1.1M"),
+        Podcast(id: "22", title: "Peak Performance", author: "Dr. Elena", category: .motivation, contentType: .podcast, imageUrl: "https://picsum.photos/seed/22/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", rating: 4.7, views: "400K"),
+
+        // --- STORIES ---
+        Podcast(id: "3", title: "History Unfolded", author: "James Miller", category: .stories, contentType: .podcast, imageUrl: "https://picsum.photos/seed/3/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", rating: 4.7, views: "500K"),
+        Podcast(id: "4", title: "The Daily Story", author: "Emily Rose", category: .stories, contentType: .podcast, imageUrl: "https://picsum.photos/seed/4/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", rating: 4.9, views: "2.1M"),
+        Podcast(id: "12", title: "The Horror Hour", author: "Night Owl", category: .stories, contentType: .podcast, imageUrl: "https://picsum.photos/seed/12/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", rating: 4.9, views: "3.2M"),
+        Podcast(id: "17", title: "Crime Scene", author: "Agent Mulder", category: .stories, contentType: .podcast, imageUrl: "https://picsum.photos/seed/17/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3", rating: 4.9, views: "2.8M"),
+
+        // --- HEALTH ---
+        Podcast(id: "5", title: "Deep Meditation", author: "Zen Master", category: .health, contentType: .podcast, imageUrl: "https://picsum.photos/seed/5/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", rating: 4.6, views: "120K"),
+        Podcast(id: "8", title: "Yoga Vibes", author: "Adriene", category: .health, contentType: .podcast, imageUrl: "https://picsum.photos/seed/8/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3", rating: 4.9, views: "1.5M"),
+        Podcast(id: "14", title: "Healthy Eating", author: "Chef Nutri", category: .health, contentType: .podcast, imageUrl: "https://picsum.photos/seed/14/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", rating: 4.5, views: "400K"),
+        Podcast(id: "20", title: "Zen Living", author: "Peaceful Pat", category: .health, contentType: .podcast, imageUrl: "https://picsum.photos/seed/20/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.6, views: "180K"),
+
+        // --- EDUCATION ---
+        Podcast(id: "7", title: "Startup Stories", author: "Silicon Sam", category: .education, contentType: .podcast, imageUrl: "https://picsum.photos/seed/7/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3", rating: 4.5, views: "300K"),
+        Podcast(id: "10", title: "Business Daily", author: "John Galt", category: .education, contentType: .podcast, imageUrl: "https://picsum.photos/seed/10/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3", rating: 4.4, views: "200K"),
+        Podcast(id: "11", title: "Space Odyssey", author: "Astro Ben", category: .education, contentType: .podcast, imageUrl: "https://picsum.photos/seed/11/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.8, views: "700K"),
+        Podcast(id: "15", title: "Marketing 101", author: "Ad Guru", category: .education, contentType: .podcast, imageUrl: "https://picsum.photos/seed/15/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", rating: 4.3, views: "90K"),
+        Podcast(id: "18", title: "Physics Fun", author: "Prof. Proton", category: .education, contentType: .podcast, imageUrl: "https://picsum.photos/seed/18/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3", rating: 4.8, views: "550K"),
+
+        // --- MUSIC (ContentType: .music) ---
+        Podcast(id: "9", title: "Indie Beats", author: "DJ Echo", category: .music, contentType: .music, imageUrl: "https://picsum.photos/seed/9/400/400", audioUrl: "https://opensource.adobe.com/dc-neue-assets/samples/quiz2.mp3", rating: 4.7, views: "450K"),
+        Podcast(id: "16", title: "Jazz Lounge", author: "Smooth Sax", category: .music, contentType: .music, imageUrl: "https://picsum.photos/seed/16/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", rating: 4.7, views: "250K"),
+        Podcast(id: "23", title: "Lo-Fi Study", author: "Chill Hop", category: .music, contentType: .music, imageUrl: "https://picsum.photos/seed/23/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", rating: 4.8, views: "3M"),
+        Podcast(id: "24", title: "Rock Classics", author: "The Rebels", category: .music, contentType: .music, imageUrl: "https://picsum.photos/seed/24/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", rating: 4.6, views: "1.8M"),
+        Podcast(id: "25", title: "Synthwave Night", author: "Neon Driver", category: .music, contentType: .music, imageUrl: "https://picsum.photos/seed/25/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", rating: 4.9, views: "700K")
     ]
+}
+
+// MARK: - Data Helpers
+
+func getContent(by type: ContentType) -> [Podcast] {
+    MockData.allPodcasts.filter { $0.contentType == type }
 }
 
 func getFilteredPodcasts(for categoryType: CategoryType) -> [Podcast] {
