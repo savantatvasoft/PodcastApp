@@ -15,17 +15,13 @@ class PodcastDiscoveryVC: UIViewController {
     private var selectedCategoryIndex = 0
     private let categories = CategoryType.allCases
     private var filteredPodcasts: [Podcast] {
-            let selectedType = categories[selectedCategoryIndex]
-            if selectedType == .all {
-                return MockData.allPodcasts
-            } else {
-                return MockData.allPodcasts.filter { $0.category == selectedType }
-            }
+        let selectedType = categories[selectedCategoryIndex]
+        let source = (selectedType == .all) ? MockData.allPodcasts : MockData.allPodcasts.filter { $0.category == selectedType }
+        return Array(source.prefix(5))
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupCollectionView()
     }
     
@@ -147,12 +143,14 @@ extension PodcastDiscoveryVC {
         
         let oldIndexPath = IndexPath(item: previousIndex, section: 0)
         let newIndexPath = IndexPath(item: selectedCategoryIndex, section: 0)
+
         collectionView.performBatchUpdates({
             collectionView.reloadItems(at: [oldIndexPath, newIndexPath])
             collectionView.reloadSections(IndexSet(integer: 1))
         }, completion: { _ in
             self.collectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: true)
         })
+
         UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
 
         print("Category selected: \(categories[selectedCategoryIndex].rawValue)")

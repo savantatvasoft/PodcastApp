@@ -6,41 +6,57 @@
 //
 
 import UIKit
+import Kingfisher
 
 class PodcastListCell: UICollectionViewCell {
-    
+
     @IBOutlet weak var conatinerView: UIView!
     @IBOutlet weak var imgUrl: UIImageView!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var authorName: UILabel!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        setupUI()
+
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+        conatinerView.backgroundColor = .systemGray5
+
+        imgUrl.backgroundColor = .systemGray5
+        imgUrl.clipsToBounds = true
+        imgUrl.contentMode = .scaleAspectFill
+        imgUrl.image = UIImage(named: "music.note")
     }
-    
-    private func setupUI() {
-        self.contentView.layer.masksToBounds = true
-        self.contentView.backgroundColor = .clear
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imgUrl.layoutIfNeeded()
     }
-    
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imgUrl.kf.cancelDownloadTask()
+        imgUrl.image = UIImage(named: "music.note")
+    }
+
     func configure(with podcast: Podcast) {
         title.text = podcast.title
         authorName.text = podcast.author
-          
-            if let url = URL(string: podcast.imageUrl) {
-                // Basic async loading (Consider using Kingfisher for better performance)
-                URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-                    if let data = data, let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self?.imgUrl.image = image
-                        }
-                    }
-                }.resume()
-            }
-            
-            self.invalidateIntrinsicContentSize()
-            self.layoutIfNeeded()
+
+        guard let url = URL(string: podcast.imageUrl) else { return }
+
+        let processor = DownsamplingImageProcessor(size: imgUrl.bounds.size)
+        let screenScale = self.traitCollection.displayScale
+        imgUrl.kf.setImage(
+            with: url,
+            placeholder: UIImage(named: "music.note"),
+            options: [
+                .processor(processor),
+                .scaleFactor(screenScale),
+                .transition(.none),
+                .cacheOriginalImage,
+                .backgroundDecode
+            ]
+        )
     }
-    
 }
