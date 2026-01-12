@@ -80,6 +80,7 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
         switch indexPath.section {
             case 1:
                 header.title.text = "Trending Podcast"
+
             case 2:
                 header.title.text = "Favorite Podcasts"
             default:
@@ -155,25 +156,37 @@ extension PodcastDiscoveryVC {
     }
     
     private func handleCategorySelection(at indexPath: IndexPath) {
+        // 1. Store previous index
         let previousIndex = vm.selectedCategoryIndex
-        vm.selectedCategoryIndex = indexPath.item
 
-        let oldIndexPath = IndexPath(item: previousIndex, section: 0)
+        // 2. Update ViewModel
+        vm.selectCategory(at: indexPath.item)
+
+        // 3. Define the new IndexPath for scrolling
         let newIndexPath = IndexPath(item: vm.selectedCategoryIndex, section: 0)
 
-        collectionView.performBatchUpdates({
-            collectionView.reloadItems(at: [oldIndexPath, newIndexPath])
-            collectionView.reloadSections(IndexSet(integer: 1))
+        // 4. Reload everything at once to avoid batch update conflicts
+        UIView.transition(with: collectionView,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            self.collectionView.reloadData()
         }, completion: { _ in
+            // Center the selected category
             self.collectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: true)
         })
-
-        UIView.transition(with: collectionView, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
     }
-    
+
     private func handleTrendingSelection(at indexPath: IndexPath) {
-        let selectedPodcast = MockData.allPodcasts[indexPath.item]
-//        vm.didSelectPodcast(selectedPodcast, index: indexPath.item)
+        let selectedPodcast: Podcast
+
+        // Pick from the correct filtered array based on the section clicked
+        if indexPath.section == 1 {
+            selectedPodcast = vm.filteredTrendingPodcasts[indexPath.item]
+        } else {
+            selectedPodcast = vm.filteredFavouritePodcasts[indexPath.item]
+        }
+
         if let mainTabBar = self.tabBarController as? MainTabBarController {
             mainTabBar.updateMiniPlayer(with: selectedPodcast)
         }
