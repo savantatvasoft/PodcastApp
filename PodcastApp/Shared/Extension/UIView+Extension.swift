@@ -8,6 +8,11 @@
 import UIKit
 
 extension UIView {
+
+    enum BorderSide: String {
+        case top, bottom, left, right
+    }
+
     func findFirstResponder() -> UIView? {
         if isFirstResponder { return self }
         for subview in subviews {
@@ -16,5 +21,54 @@ extension UIView {
             }
         }
         return nil
+    }
+
+    func addSideBorder(side: BorderSide, color: UIColor, width: CGFloat) {
+        // Remove existing border view for this side
+        let borderTag = 9000 + side.hashValue
+        viewWithTag(borderTag)?.removeFromSuperview()
+
+        // Create a UIView-based border instead of CALayer
+        let borderView = UIView()
+        borderView.tag = borderTag
+        borderView.backgroundColor = color
+        borderView.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(borderView)
+
+        // Use Auto Layout constraints for automatic resizing
+        switch side {
+        case .top:
+            NSLayoutConstraint.activate([
+                borderView.topAnchor.constraint(equalTo: topAnchor),
+                borderView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                borderView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                borderView.heightAnchor.constraint(equalToConstant: width)
+            ])
+
+        case .bottom:
+            NSLayoutConstraint.activate([
+                borderView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                borderView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                borderView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                borderView.heightAnchor.constraint(equalToConstant: width)
+            ])
+
+        case .left:
+            NSLayoutConstraint.activate([
+                borderView.topAnchor.constraint(equalTo: topAnchor),
+                borderView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                borderView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                borderView.widthAnchor.constraint(equalToConstant: width)
+            ])
+
+        case .right:
+            NSLayoutConstraint.activate([
+                borderView.topAnchor.constraint(equalTo: topAnchor),
+                borderView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                borderView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                borderView.widthAnchor.constraint(equalToConstant: width)
+            ])
+        }
     }
 }

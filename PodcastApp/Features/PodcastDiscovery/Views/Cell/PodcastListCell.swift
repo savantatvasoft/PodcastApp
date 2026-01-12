@@ -16,7 +16,7 @@ class PodcastListCell: UICollectionViewCell {
     @IBOutlet weak var authorName: UILabel!
 
     @IBOutlet weak var rightImage: UIImageView!
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -37,28 +37,13 @@ class PodcastListCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        imgUrl.kf.cancelDownloadTask()
+        imgUrl.cancelImageLoad()
         imgUrl.image = UIImage(named: "music.note")
     }
 
     func configure(with podcast: Podcast) {
         title.text = podcast.title
         authorName.text = podcast.author
-
-        guard let url = URL(string: podcast.imageUrl) else { return }
-
-        let processor = DownsamplingImageProcessor(size: imgUrl.bounds.size)
-        let screenScale = self.traitCollection.displayScale
-        imgUrl.kf.setImage(
-            with: url,
-            placeholder: UIImage(named: "music.note"),
-            options: [
-                .processor(processor),
-                .scaleFactor(screenScale),
-                .transition(.none),
-                .cacheOriginalImage,
-                .backgroundDecode
-            ]
-        )
+        imgUrl.loadImage(from: podcast.imageUrl)
     }
 }

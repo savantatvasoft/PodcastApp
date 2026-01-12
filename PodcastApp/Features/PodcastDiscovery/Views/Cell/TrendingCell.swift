@@ -24,6 +24,7 @@ class TrendingCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
+        imageView.cancelImageLoad()
     }
     
     private func setupUI() {
@@ -34,18 +35,6 @@ class TrendingCell: UICollectionViewCell {
     func configure(with podcast: Podcast) {
             title.text = podcast.title
             language.text = podcast.category.rawValue
-            if let url = URL(string: podcast.imageUrl) {
-                // Basic async loading (Consider using Kingfisher for better performance)
-                URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-                    if let data = data, let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self?.imageView.image = image
-                        }
-                    }
-                }.resume()
-            }
-            
-            self.invalidateIntrinsicContentSize()
-            self.layoutIfNeeded()
+            imageView.loadImage(from: podcast.imageUrl)
     }
 }

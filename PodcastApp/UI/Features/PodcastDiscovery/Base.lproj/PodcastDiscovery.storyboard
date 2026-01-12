@@ -329,6 +329,7 @@
                                                     </constraints>
                                                 </view>
                                             </subviews>
+                                            <color key="backgroundColor" name="PrimaryRed"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="F3p-cY-6oP" secondAttribute="bottom" id="HrS-3x-Sra"/>
                                                 <constraint firstAttribute="trailing" secondItem="F3p-cY-6oP" secondAttribute="trailing" id="Zxn-IO-8Wg"/>

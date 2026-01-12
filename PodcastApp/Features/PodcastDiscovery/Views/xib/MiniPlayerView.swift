@@ -22,6 +22,7 @@ class MiniPlayerView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        addSideBorder(side: .top, color: .systemGray4, width: 0.5)
         setupGestures()
     }
     
@@ -47,15 +48,6 @@ class MiniPlayerView: UIView {
     func configure(with podcast: Podcast) {
         title.text = podcast.title
         songDescription.text = podcast.author
-
-        if let url = URL(string: podcast.imageUrl) {
-            URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-                if let data = data, let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.imageView.image = image
-                    }
-                }
-            } .resume()
-        }
+        imageView.loadImage(from: podcast.imageUrl)
     }
 }
