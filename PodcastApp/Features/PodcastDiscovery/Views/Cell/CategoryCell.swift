@@ -26,7 +26,7 @@ class CategoryCell: UICollectionViewCell {
     }
     
     func configure(text: String, isSelected: Bool) {
-        title.text = text
+        title.text = text.capitalized
         bottomBorder.isHidden = !isSelected
         title.textColor = isSelected ? .systemRed : .systemGray
      

@@ -50,11 +50,16 @@ extension PodcastDiscoveryVC: TrendingHeaderDelegate {
 extension PodcastDiscoveryVC: UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return vm.totalSections
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return section == 0 ? vm.categories.count : vm.filteredPodcasts.count
+        switch section {
+            case 0: return vm.categories.count
+            case 1: return vm.filteredTrendingPodcasts.count
+            case 2: return vm.filteredFavouritePodcasts.count
+            default: return 0
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -71,7 +76,16 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
         header.delegate = self
-        header.title.text = "Trending Podcast"
+
+        switch indexPath.section {
+            case 1:
+                header.title.text = "Trending Podcast"
+            case 2:
+                header.title.text = "Favorite Podcasts"
+            default:
+                header.title.text = ""
+        }
+
         return header
     }
 }
@@ -95,6 +109,8 @@ extension PodcastDiscoveryVC {
             return configureCategoryCell(at: indexPath)
         case 1:
             return configureTrendingCell(at: indexPath)
+        case 2:
+            return configureFavouriteCell(at: indexPath)
         default:
             return UICollectionViewCell()
         }
@@ -110,7 +126,14 @@ extension PodcastDiscoveryVC {
     
     private func configureTrendingCell(at indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrendingCell.reuseIdentifier, for: indexPath) as! TrendingCell
-        let podcast = vm.filteredPodcasts[indexPath.item]
+        let podcast = vm.filteredTrendingPodcasts[indexPath.item]
+        cell.configure(with: podcast)
+        return cell
+    }
+
+    private func configureFavouriteCell(at indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrendingCell.reuseIdentifier, for: indexPath) as! TrendingCell
+        let podcast = vm.filteredFavouritePodcasts[indexPath.item]
         cell.configure(with: podcast)
         return cell
     }
@@ -124,7 +147,7 @@ extension PodcastDiscoveryVC {
         switch indexPath.section {
         case 0:
             handleCategorySelection(at: indexPath)
-        case 1:
+        case 1,2:
             handleTrendingSelection(at: indexPath)
         default:
             break

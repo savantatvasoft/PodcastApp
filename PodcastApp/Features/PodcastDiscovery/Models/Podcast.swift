@@ -81,6 +81,64 @@ struct MockData {
         Podcast(id: "24", title: "Rock Classics", author: "The Rebels", category: .music, contentType: .music, imageUrl: "https://picsum.photos/seed/24/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", rating: 4.6, views: "1.8M"),
         Podcast(id: "25", title: "Synthwave Night", author: "Neon Driver", category: .music, contentType: .music, imageUrl: "https://picsum.photos/seed/25/400/400", audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", rating: 4.9, views: "700K")
     ]
+
+    static let favoritePodcasts: [Podcast] = [
+            Podcast(
+                id: "fav_101",
+                title: "The Mel Robbins Podcast",
+                author: "Mel Robbins",
+                category: .motivation,
+                contentType: .podcast,
+                imageUrl: "https://picsum.photos/seed/fav101/400/400",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                rating: 4.9,
+                views: "5.2M"
+            ),
+            Podcast(
+                id: "fav_102",
+                title: "Huberman Lab",
+                author: "Dr. Andrew Huberman",
+                category: .health,
+                contentType: .podcast,
+                imageUrl: "https://picsum.photos/seed/fav102/400/400",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+                rating: 4.9,
+                views: "8.1M"
+            ),
+            Podcast(
+                id: "fav_103",
+                title: "Lex Fridman Podcast",
+                author: "Lex Fridman",
+                category: .tech,
+                contentType: .podcast,
+                imageUrl: "https://picsum.photos/seed/fav103/400/400",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                rating: 4.8,
+                views: "3.5M"
+            ),
+            Podcast(
+                id: "fav_104",
+                title: "Serial",
+                author: "Sarah Koenig",
+                category: .stories,
+                contentType: .podcast,
+                imageUrl: "https://picsum.photos/seed/fav104/400/400",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+                rating: 4.7,
+                views: "12M"
+            ),
+            Podcast(
+                id: "fav_105",
+                title: "Tiny Desk Concerts",
+                author: "NPR Music",
+                category: .music,
+                contentType: .music,
+                imageUrl: "https://picsum.photos/seed/fav105/400/400",
+                audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+                rating: 4.9,
+                views: "15M"
+            )
+        ]
 }
 
 func getContent(by type: ContentType) -> [Podcast] {

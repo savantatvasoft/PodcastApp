@@ -12,10 +12,12 @@ struct PodcastLayoutFactory {
     static func createDiscoveryLayout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout { (sectionIndex, _) -> NSCollectionLayoutSection? in
             switch sectionIndex {
-            case 0:
-                return createCategorySection()
-            default:
-                return createTrendingSection()
+                case 0:
+                    return createCategorySection()
+                case 1,2:
+                    return createTrendingSection()
+                default:
+                    return nil
             }
         }
     }
