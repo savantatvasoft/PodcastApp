@@ -132,7 +132,7 @@
                                                                     <subviews>
                                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="antenna.radiowaves.left.and.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Rum-ez-2r7">
                                                                             <rect key="frame" x="5" y="9.0000000000000036" width="25" height="22.333333333333339"/>
-                                                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                            <color key="tintColor" name="InactiveGray"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" secondItem="Rum-ez-2r7" secondAttribute="height" multiplier="1:1" id="Ykb-Hy-UZB"/>
                                                                                 <constraint firstAttribute="width" constant="25" id="uWa-de-3LV"/>
@@ -154,7 +154,7 @@
                                                                             </userDefinedRuntimeAttributes>
                                                                         </imageView>
                                                                     </subviews>
-                                                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                                    <color key="backgroundColor" name="MainBackground"/>
                                                                     <constraints>
                                                                         <constraint firstItem="cNO-CH-ej9" firstAttribute="centerY" secondItem="MZH-S0-4CR" secondAttribute="centerY" id="35j-Vo-2Op"/>
                                                                         <constraint firstItem="Rum-ez-2r7" firstAttribute="leading" secondItem="MZH-S0-4CR" secondAttribute="leading" constant="5" id="4r7-tC-Xkd"/>
@@ -272,8 +272,8 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F3p-cY-6oP">
                                                     <rect key="frame" x="0.0" y="0.0" width="393" height="60"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="AcE-88-KDG">
-                                                            <rect key="frame" x="14" y="1.6666666666666643" width="50" height="47"/>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="AcE-88-KDG">
+                                                            <rect key="frame" x="14" y="6.6666666666666643" width="50" height="47"/>
                                                             <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="50" id="L4y-EI-AgY"/>
@@ -308,7 +308,7 @@
                                                         </view>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list.dash" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Kit-1F-2G5">
                                                             <rect key="frame" x="357" y="21.333333333333329" width="24" height="17.666666666666671"/>
-                                                            <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="tintColor" name="InactiveGray"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="24" id="ShR-Vn-mDB"/>
                                                                 <constraint firstAttribute="width" constant="24" id="xqc-xZ-S9O"/>
@@ -319,8 +319,8 @@
                                                     <constraints>
                                                         <constraint firstItem="Kit-1F-2G5" firstAttribute="leading" secondItem="ig5-LH-CXZ" secondAttribute="trailing" constant="8" id="4U1-wP-YMN"/>
                                                         <constraint firstItem="ig5-LH-CXZ" firstAttribute="top" secondItem="F3p-cY-6oP" secondAttribute="top" id="5e3-z0-QQj"/>
+                                                        <constraint firstItem="AcE-88-KDG" firstAttribute="centerY" secondItem="F3p-cY-6oP" secondAttribute="centerY" id="8jq-dr-6hh"/>
                                                         <constraint firstAttribute="trailing" secondItem="Kit-1F-2G5" secondAttribute="trailing" constant="12" id="G85-uo-7TZ"/>
-                                                        <constraint firstItem="AcE-88-KDG" firstAttribute="top" secondItem="ig5-LH-CXZ" secondAttribute="top" id="LGV-n2-8FJ"/>
                                                         <constraint firstItem="ig5-LH-CXZ" firstAttribute="leading" secondItem="AcE-88-KDG" secondAttribute="trailing" constant="8" id="RBz-7A-u8s"/>
                                                         <constraint firstItem="Kit-1F-2G5" firstAttribute="centerY" secondItem="F3p-cY-6oP" secondAttribute="centerY" id="TVM-F9-bqf"/>
                                                         <constraint firstAttribute="bottom" secondItem="ig5-LH-CXZ" secondAttribute="bottom" id="TZu-ge-Dfw"/>
@@ -329,7 +329,7 @@
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <color key="backgroundColor" name="MainBackground"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="F3p-cY-6oP" secondAttribute="bottom" id="HrS-3x-Sra"/>
                                                 <constraint firstAttribute="trailing" secondItem="F3p-cY-6oP" secondAttribute="trailing" id="Zxn-IO-8Wg"/>

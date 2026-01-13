@@ -25,6 +25,11 @@
                                 <constraint firstAttribute="width" secondItem="Lwd-be-iJi" secondAttribute="height" multiplier="1:1" id="AVn-gf-8Bd"/>
                                 <constraint firstAttribute="width" constant="50" id="yco-qq-9li"/>
                             </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="7"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                         </imageView>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="playpause.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Mrq-h5-JXm">
                             <rect key="frame" x="329" y="20.666666666666664" width="24" height="18.666666666666664"/>
@@ -46,14 +51,14 @@
                             <rect key="frame" x="66" y="0.0" width="219" height="60"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Song name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SHN-8b-x18">
-                                    <rect key="frame" x="0.0" y="12.000000000000002" width="219" height="20.666666666666671"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="15"/>
+                                    <rect key="frame" x="0.0" y="11.999999999999998" width="219" height="23.333333333333329"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gpY-H7-QCl">
-                                    <rect key="frame" x="0.0" y="32.666666666666664" width="219" height="19.333333333333336"/>
-                                    <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="14"/>
+                                    <rect key="frame" x="0.0" y="35.333333333333336" width="219" height="20.666666666666664"/>
+                                    <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="15"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -74,11 +79,11 @@
                     <constraints>
                         <constraint firstItem="Lwd-be-iJi" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="5aN-Ut-v2l"/>
                         <constraint firstItem="ese-Ls-ajL" firstAttribute="left" secondItem="Lwd-be-iJi" secondAttribute="right" constant="8" id="8j2-9m-W7R"/>
+                        <constraint firstItem="ese-Ls-ajL" firstAttribute="top" secondItem="5b2-iZ-QUJ" secondAttribute="top" id="Dyp-zQ-C9U"/>
                         <constraint firstItem="Lwd-be-iJi" firstAttribute="leading" secondItem="5b2-iZ-QUJ" secondAttribute="leading" constant="8" id="G9U-le-rYE"/>
                         <constraint firstAttribute="trailing" secondItem="Mrq-h5-JXm" secondAttribute="trailing" constant="8" id="Tbn-kH-2w0"/>
                         <constraint firstItem="Mrq-h5-JXm" firstAttribute="leading" secondItem="Y1Z-hU-OYd" secondAttribute="trailing" constant="12" id="YuL-eq-oZt"/>
                         <constraint firstItem="Y1Z-hU-OYd" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="adf-rQ-aN4"/>
-                        <constraint firstItem="ese-Ls-ajL" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="apv-1t-scz"/>
                         <constraint firstItem="Mrq-h5-JXm" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="b4t-UV-1An"/>
                         <constraint firstItem="Y1Z-hU-OYd" firstAttribute="leading" secondItem="ese-Ls-ajL" secondAttribute="trailing" constant="8" id="bQg-Ig-4nb"/>
                     </constraints>

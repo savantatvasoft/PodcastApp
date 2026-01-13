@@ -14,7 +14,6 @@ class PodcastListCell: UICollectionViewCell {
     @IBOutlet weak var imgUrl: UIImageView!
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var authorName: UILabel!
-
     @IBOutlet weak var rightImage: UIImageView!
 
     override func awakeFromNib() {
@@ -37,9 +36,10 @@ class PodcastListCell: UICollectionViewCell {
         imgUrl.image = UIImage(named: "music.note")
     }
 
-    func configure(with podcast: Podcast) {
+    func configure(with podcast: Podcast , isSelected: Bool) {
         title.text = podcast.title.trimmingCharacters(in: .whitespacesAndNewlines)
         authorName.text = podcast.author.trimmingCharacters(in: .whitespacesAndNewlines)
+        rightImage.tintColor = isSelected ? .red : UIColor.inactiveGray
         imgUrl.loadImage(from: podcast.imageUrl)
     }
 }

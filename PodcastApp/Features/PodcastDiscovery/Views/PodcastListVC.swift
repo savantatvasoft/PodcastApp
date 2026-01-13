@@ -9,6 +9,7 @@ import UIKit
 class PodcastListVC: UIViewController {
 
     @IBOutlet weak var collctionView: UICollectionView!
+    private var selectedIndex: Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +47,8 @@ extension PodcastListVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PodcastListCell", for: indexPath) as! PodcastListCell
         let podcast = MockData.allPodcasts[indexPath.item]
-        cell.configure(with: podcast)
+        let isSelected = (indexPath.item == selectedIndex)
+        cell.configure(with: podcast,isSelected: isSelected)
         return cell
     }
 
@@ -72,14 +74,16 @@ extension PodcastListVC: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedPodcast = MockData.allPodcasts[indexPath.item]
+        selectedIndex = indexPath.item
         if let mainTabBar = self.tabBarController as? MainTabBarController {
             mainTabBar.updateMiniPlayer(with: selectedPodcast)
         }
+        collectionView.reloadData()
     }
 }
 
 extension PodcastListVC: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 80)
+        return CGSize(width: collectionView.bounds.width, height: 60)
     }
 }
