@@ -20,10 +20,6 @@ class PodcastListCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
-        conatinerView.backgroundColor = .systemGray5
-
         imgUrl.backgroundColor = .systemGray5
         imgUrl.clipsToBounds = true
         imgUrl.contentMode = .scaleAspectFill
@@ -42,8 +38,8 @@ class PodcastListCell: UICollectionViewCell {
     }
 
     func configure(with podcast: Podcast) {
-        title.text = podcast.title
-        authorName.text = podcast.author
+        title.text = podcast.title.trimmingCharacters(in: .whitespacesAndNewlines)
+        authorName.text = podcast.author.trimmingCharacters(in: .whitespacesAndNewlines)
         imgUrl.loadImage(from: podcast.imageUrl)
     }
 }

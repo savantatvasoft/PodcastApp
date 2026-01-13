@@ -43,7 +43,15 @@ extension PodcastDiscoveryVC: TrendingHeaderDelegate {
     func didTapTrendingHeaderLeft() {
         performSegue(withIdentifier: "showPodcastList", sender: nil)
     }
-    
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showPodcastList" {
+            if let destinationVC = segue.destination as? PodcastListVC {
+                destinationVC.hidesBottomBarWhenPushed = false
+            }
+        }
+    }
+
 }
 
 // MARK: - UICollectionView DataSource
@@ -156,31 +164,20 @@ extension PodcastDiscoveryVC {
     }
     
     private func handleCategorySelection(at indexPath: IndexPath) {
-        // 1. Store previous index
-        let previousIndex = vm.selectedCategoryIndex
-
-        // 2. Update ViewModel
         vm.selectCategory(at: indexPath.item)
-
-        // 3. Define the new IndexPath for scrolling
         let newIndexPath = IndexPath(item: vm.selectedCategoryIndex, section: 0)
-
-        // 4. Reload everything at once to avoid batch update conflicts
         UIView.transition(with: collectionView,
                           duration: 0.3,
                           options: .transitionCrossDissolve,
                           animations: {
             self.collectionView.reloadData()
         }, completion: { _ in
-            // Center the selected category
             self.collectionView.scrollToItem(at: newIndexPath, at: .centeredHorizontally, animated: true)
         })
     }
 
     private func handleTrendingSelection(at indexPath: IndexPath) {
         let selectedPodcast: Podcast
-
-        // Pick from the correct filtered array based on the section clicked
         if indexPath.section == 1 {
             selectedPodcast = vm.filteredTrendingPodcasts[indexPath.item]
         } else {

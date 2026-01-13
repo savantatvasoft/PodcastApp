@@ -6,7 +6,6 @@
 //
 
 import UIKit
-
 class PodcastListVC: UIViewController {
 
     @IBOutlet weak var collctionView: UICollectionView!
@@ -17,9 +16,23 @@ class PodcastListVC: UIViewController {
     }
 
     private func setupCollectionView() {
+        let headerNib = UINib(nibName: "Header", bundle: nil)
+        collctionView.register(headerNib,
+                              forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                              withReuseIdentifier: Header.reuseIdentifier)
+
         if let layout = collctionView.collectionViewLayout as? UICollectionViewFlowLayout {
             layout.scrollDirection = .vertical
+            layout.headerReferenceSize = CGSize(width: collctionView.bounds.width, height: 50)
+            layout.sectionInset = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
         }
+    }
+}
+
+// MARK: - Header Delegate
+extension PodcastListVC: HeaderDelegate {
+    func didTapBack() {
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
@@ -36,17 +49,37 @@ extension PodcastListVC: UICollectionViewDataSource {
         cell.configure(with: podcast)
         return cell
     }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: Header.reuseIdentifier,
+            for: indexPath
+        ) as! Header
+        header.delegate = self
+        header.configure(with: "Trending Podcasts", showBackIcon: true)
+
+        return header
+    }
 }
 
-// MARK: - Flow Layout (Fixes Width to 0-0 Leading/Trailing)
-extension PodcastListVC: UICollectionViewDelegateFlowLayout {
+// MARK: - CollectionView Delegate
+extension PodcastListVC: UICollectionViewDelegate {
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let screenWidth = collectionView.bounds.width
-        return CGSize(width: screenWidth, height: 60)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedPodcast = MockData.allPodcasts[indexPath.item]
+        if let mainTabBar = self.tabBarController as? MainTabBarController {
+            mainTabBar.updateMiniPlayer(with: selectedPodcast)
+        }
     }
+}
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 6
+extension PodcastListVC: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 80)
     }
 }

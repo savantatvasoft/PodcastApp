@@ -10,7 +10,7 @@ import UIKit
 
 struct AppLayout {
 
-    static let trendingSectionHeight: CGFloat = 200.0
+    static let trendingSectionHeight: CGFloat = 210.0
 
     private static var activeWindowScene: UIWindowScene? {
         return UIApplication.shared.connectedScenes
@@ -31,8 +31,7 @@ struct AppLayout {
     }
 
     static var podcastWidthFactor: CGFloat {
-        return isLandscape ? 0.2 : 0.4
+        return isLandscape ? 0.2 : 0.35
     }
-
 
 }
