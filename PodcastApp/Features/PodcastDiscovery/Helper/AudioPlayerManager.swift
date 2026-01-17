@@ -17,8 +17,14 @@ final class AudioPlayerManager {
     // MARK: - Player
     private var player: AVPlayer?
     private var timeControlObserver: NSKeyValueObservation?
+    var currentTime: Double {
+        return player?.currentTime().seconds ?? 0
+    }
 
-    // MARK: - Callbacks
+    var duration: Double {
+        return player?.currentItem?.duration.seconds ?? 0
+    }
+
     var onStateChange: ((AVPlayer.TimeControlStatus) -> Void)?
     var onTrackStarted: ((Podcast) -> Void)?
 
@@ -27,7 +33,6 @@ final class AudioPlayerManager {
         player?.timeControlStatus == .playing
     }
 
-    // MARK: - Audio Session
     private func configureSession(mode: AVAudioSession.Mode) {
         let session = AVAudioSession.sharedInstance()
         do {
@@ -38,7 +43,6 @@ final class AudioPlayerManager {
         }
     }
 
-    // MARK: - Observation
     private func observePlayerState() {
         timeControlObserver = player?.observe(
             \.timeControlStatus,
@@ -50,7 +54,6 @@ final class AudioPlayerManager {
         }
     }
 
-    // MARK: - Playback Controls
     func play(
         podcast: Podcast,
         mode: AVAudioSession.Mode = .spokenAudio
@@ -86,5 +89,10 @@ final class AudioPlayerManager {
         timeControlObserver?.invalidate()
         timeControlObserver = nil
         onStateChange?(.paused)
+    }
+
+    func seek(to seconds: Double) {
+        let targetTime = CMTime(seconds: seconds, preferredTimescale: 600)
+        player?.seek(to: targetTime)
     }
 }

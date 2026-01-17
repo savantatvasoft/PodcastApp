@@ -40,14 +40,20 @@ class PodcastDiscoveryVC: UIViewController {
 
 extension PodcastDiscoveryVC: TrendingHeaderDelegate {
 
-    func didTapTrendingHeaderLeft() {
-        performSegue(withIdentifier: "showPodcastList", sender: nil)
+    func didTapTrendingHeaderLeft(for title: String) {
+        performSegue(withIdentifier: "showPodcastList", sender: title)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showPodcastList" {
-            if let destinationVC = segue.destination as? PodcastListVC {
+            if let destinationVC = segue.destination as? PodcastListVC,
+               let headerTitle = sender as? String {
                 destinationVC.hidesBottomBarWhenPushed = false
+                if headerTitle == "Trending Podcast" {
+                    destinationVC.podcasts = vm.filteredTrendingPodcasts
+                } else {
+                    destinationVC.podcasts = vm.filteredFavouritePodcasts
+                }
             }
         }
     }
@@ -90,7 +96,7 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
                 header.title.text = "Trending Podcast"
 
             case 2:
-                header.title.text = "Favorite Podcasts"
+                header.title.text = "Favourite Podcasts"
             default:
                 header.title.text = ""
         }
@@ -178,14 +184,18 @@ extension PodcastDiscoveryVC {
 
     private func handleTrendingSelection(at indexPath: IndexPath) {
         let selectedPodcast: Podcast
+        let currentList: [Podcast]
+
         if indexPath.section == 1 {
             selectedPodcast = vm.filteredTrendingPodcasts[indexPath.item]
+            currentList = vm.filteredTrendingPodcasts
         } else {
             selectedPodcast = vm.filteredFavouritePodcasts[indexPath.item]
+            currentList = vm.filteredFavouritePodcasts
         }
 
         if let mainTabBar = self.tabBarController as? MainTabBarController {
-            mainTabBar.updateMiniPlayer(with: selectedPodcast)
+            mainTabBar.updateMiniPlayer(with: selectedPodcast, from: currentList)
         }
     }
 }

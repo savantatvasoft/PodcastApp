@@ -47,17 +47,25 @@
                                 <constraint firstAttribute="width" constant="24" id="VFr-OU-CY5"/>
                             </constraints>
                         </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="playpause.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="WAW-oO-0bk">
+                            <rect key="frame" x="257" y="20.666666666666664" width="24" height="18.666666666666664"/>
+                            <color key="tintColor" name="Label"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="WAW-oO-0bk" secondAttribute="height" multiplier="1:1" id="1mA-g2-HFa"/>
+                                <constraint firstAttribute="width" constant="24" id="q7J-P5-Tbd"/>
+                            </constraints>
+                        </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ese-Ls-ajL" userLabel="InformationView">
-                            <rect key="frame" x="66" y="0.0" width="219" height="60"/>
+                            <rect key="frame" x="66" y="0.0" width="183" height="60"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Song name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SHN-8b-x18">
-                                    <rect key="frame" x="0.0" y="11.999999999999998" width="219" height="23.333333333333329"/>
+                                    <rect key="frame" x="0.0" y="11.999999999999998" width="183" height="23.333333333333329"/>
                                     <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gpY-H7-QCl">
-                                    <rect key="frame" x="0.0" y="35.333333333333336" width="219" height="20.666666666666664"/>
+                                    <rect key="frame" x="0.0" y="35.333333333333336" width="183" height="20.666666666666664"/>
                                     <fontDescription key="fontDescription" name="Avenir-Light" family="Avenir" pointSize="15"/>
                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -77,6 +85,7 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
+                        <constraint firstItem="Y1Z-hU-OYd" firstAttribute="leading" secondItem="WAW-oO-0bk" secondAttribute="trailing" constant="12" id="44R-j5-lY1"/>
                         <constraint firstItem="Lwd-be-iJi" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="5aN-Ut-v2l"/>
                         <constraint firstItem="ese-Ls-ajL" firstAttribute="left" secondItem="Lwd-be-iJi" secondAttribute="right" constant="8" id="8j2-9m-W7R"/>
                         <constraint firstItem="ese-Ls-ajL" firstAttribute="top" secondItem="5b2-iZ-QUJ" secondAttribute="top" id="Dyp-zQ-C9U"/>
@@ -85,7 +94,8 @@
                         <constraint firstItem="Mrq-h5-JXm" firstAttribute="leading" secondItem="Y1Z-hU-OYd" secondAttribute="trailing" constant="12" id="YuL-eq-oZt"/>
                         <constraint firstItem="Y1Z-hU-OYd" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="adf-rQ-aN4"/>
                         <constraint firstItem="Mrq-h5-JXm" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="b4t-UV-1An"/>
-                        <constraint firstItem="Y1Z-hU-OYd" firstAttribute="leading" secondItem="ese-Ls-ajL" secondAttribute="trailing" constant="8" id="bQg-Ig-4nb"/>
+                        <constraint firstItem="WAW-oO-0bk" firstAttribute="leading" secondItem="ese-Ls-ajL" secondAttribute="trailing" constant="8" id="bQg-Ig-4nb"/>
+                        <constraint firstItem="WAW-oO-0bk" firstAttribute="centerY" secondItem="5b2-iZ-QUJ" secondAttribute="centerY" id="xmr-rM-t1N"/>
                     </constraints>
                 </view>
             </subviews>
@@ -102,6 +112,7 @@
                 <outlet property="imageView" destination="Lwd-be-iJi" id="aNc-pf-C34"/>
                 <outlet property="nextSongView" destination="Mrq-h5-JXm" id="3F3-WL-lzA"/>
                 <outlet property="playView" destination="Y1Z-hU-OYd" id="SWm-QA-WiE"/>
+                <outlet property="previousSong" destination="WAW-oO-0bk" id="3pF-kM-ryt"/>
                 <outlet property="songDescription" destination="gpY-H7-QCl" id="SRh-eQ-ptf"/>
                 <outlet property="title" destination="SHN-8b-x18" id="mer-0p-3nv"/>
             </connections>

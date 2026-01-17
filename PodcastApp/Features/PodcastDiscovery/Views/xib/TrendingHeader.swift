@@ -8,7 +8,7 @@
 import UIKit
 
 protocol TrendingHeaderDelegate:AnyObject {
-    func didTapTrendingHeaderLeft()
+    func didTapTrendingHeaderLeft(for title: String)
 }
 
 class TrendingHeader: UICollectionReusableView {
@@ -27,7 +27,7 @@ class TrendingHeader: UICollectionReusableView {
     }
     
     @IBAction func onPressLeft(_ sender: Any) {
-        delegate?.didTapTrendingHeaderLeft() 
+        delegate?.didTapTrendingHeaderLeft(for: title.text ?? "")
     }
     
 }
