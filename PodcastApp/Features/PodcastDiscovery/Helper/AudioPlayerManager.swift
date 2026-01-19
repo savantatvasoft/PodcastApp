@@ -14,8 +14,12 @@ final class AudioPlayerManager {
 
     private var player: AVPlayer?
     private var timeControlObserver: NSKeyValueObservation?
-    var isRepeatEnabled: Bool = false
 
+    // Global State
+    var isRepeatEnabled: Bool = false
+    private(set) var currentPodcast: Podcast?
+
+    // Callbacks for UI updates
     var onTrackFinished: (() -> Void)?
     var onStateChange: ((AVPlayer.TimeControlStatus) -> Void)?
     var onTrackStarted: ((Podcast) -> Void)?
@@ -34,9 +38,10 @@ final class AudioPlayerManager {
 
     func play(podcast: Podcast) {
         stop()
+        self.currentPodcast = podcast
         guard let url = URL(string: podcast.audioUrl) else { return }
-        let item = AVPlayerItem(url: url)
 
+        let item = AVPlayerItem(url: url)
         NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying), name: .AVPlayerItemDidPlayToEndTime, object: item)
 
         player = AVPlayer(playerItem: item)
@@ -61,7 +66,6 @@ final class AudioPlayerManager {
     func pause() {
         player?.pause()
         onStateChange?(.paused)
-
     }
 
     func resume() {

@@ -10,13 +10,14 @@ import AVFoundation
 
 class MusicPlayerVC: UIViewController {
 
-    var vm: PodcastDiscoveryVM?
-    private var isRepeatEnabled: Bool = false
+    // MARK: - Properties
+    var vm: MusicPlayerVM!
     private let audioManager = AudioPlayerManager.shared
     private var timer: Timer?
     private var isUserSeeking: Bool = false
     private var isFavorite: Bool = false
 
+    // MARK: - Outlets
     @IBOutlet weak var leftImageView: UIImageView!
     @IBOutlet weak var banner: UIImageView!
     @IBOutlet weak var label: UILabel!
@@ -31,13 +32,14 @@ class MusicPlayerVC: UIViewController {
     @IBOutlet weak var forwardView: UIImageView!
     @IBOutlet weak var repeatView: UIImageView!
 
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupSlider()
         setupGestures()
-        startPlaybackTimer()
         setupManagerCallbacks()
+        startPlaybackTimer()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -45,27 +47,33 @@ class MusicPlayerVC: UIViewController {
         timer?.invalidate()
     }
 
+    // MARK: - Setup
     private func setupUI() {
-        guard let podcast = vm?.getCurrentPodcast() else { return }
-        isRepeatEnabled = audioManager.isRepeatEnabled
+        // We now get current data from the AudioManager (Source of Truth)
+        guard let podcast = audioManager.currentPodcast else { return }
+
         label.text = podcast.title
         author.text = podcast.author
         banner.loadImage(from: podcast.imageUrl)
-        banner.layer.cornerRadius = 7
+        banner.layer.cornerRadius = 15
         banner.clipsToBounds = true
 
         updatePlayPauseUI()
+        updateRepeatUI()
         updateNavigationButtons()
     }
 
     private func setupManagerCallbacks() {
         audioManager.onStateChange = { [weak self] _ in
-            self?.updatePlayPauseUI()
+            DispatchQueue.main.async {
+                self?.updatePlayPauseUI()
+            }
         }
 
         audioManager.onTrackStarted = { [weak self] _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
+                // Reset slider immediately when a new track starts
                 self.playbackSlider.value = 0
                 self.currentTimeLabel.text = "0:00"
                 self.setupUI()
@@ -73,44 +81,63 @@ class MusicPlayerVC: UIViewController {
         }
     }
 
+    // MARK: - UI Updates
     private func updatePlayPauseUI() {
-        let isPlaying = audioManager.isPlaying
-        let imageName = isPlaying ? "pause.circle.fill" : "play.circle.fill"
+        let imageName = audioManager.isPlaying ? "pause.circle.fill" : "play.circle.fill"
         playView.image = UIImage(systemName: imageName)
     }
 
-    @objc private func handlePlayPause() {
-        vm?.togglePlayPause()
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-    }
-
-    @objc private func handleNext() {
-        vm?.playNext()
-        UISelectionFeedbackGenerator().selectionChanged()
-    }
-
-    @objc private func handlePrevious() {
-        vm?.playPrevious()
-        UISelectionFeedbackGenerator().selectionChanged()
+    private func updateRepeatUI() {
+        let isEnabled = audioManager.isRepeatEnabled
+        repeatView.tintColor = isEnabled ? .systemPurple : .label
+        repeatView.image = UIImage(systemName: isEnabled ? "repeat.1" : "repeat")
     }
 
     private func updateNavigationButtons() {
-        guard let vm = vm else { return }
-        let index = vm.getPlayingIndex(in: vm.currentList) ?? 0
+        // Get navigation logic from VM
+        let index = vm.getPlayingIndex() ?? 0
 
         let hasPrevious = index > 0
         backView.isUserInteractionEnabled = hasPrevious
         backView.alpha = hasPrevious ? 1.0 : 0.3
 
-        let hasNext = index < vm.currentList.count - 1
+        let hasNext = index < vm.podcastList.count - 1
         forwardView.isUserInteractionEnabled = hasNext
         forwardView.alpha = hasNext ? 1.0 : 0.3
     }
 
+    // MARK: - Actions
+    @objc private func handlePlayPause() {
+        if audioManager.isPlaying {
+            audioManager.pause()
+        } else {
+            audioManager.resume()
+        }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    }
+
+    @objc private func handleNext() {
+        vm.playNext()
+        UISelectionFeedbackGenerator().selectionChanged()
+    }
+
+    @objc private func handlePrevious() {
+        vm.playPrevious()
+        UISelectionFeedbackGenerator().selectionChanged()
+    }
+
+    @objc private func handleRepeat() {
+        audioManager.isRepeatEnabled.toggle()
+        updateRepeatUI()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+
+    // MARK: - Slider & Timer
     private func setupSlider() {
         playbackSlider.minimumValue = 0
         playbackSlider.isContinuous = true
 
+        // Custom Thumb setup
         let thumbSize: CGFloat = 24
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: thumbSize, height: thumbSize))
         let thumbImage = renderer.image { context in
@@ -118,33 +145,11 @@ class MusicPlayerVC: UIViewController {
             UIColor.white.setFill()
             context.cgContext.fillEllipse(in: CGRect(x: 2, y: 2, width: thumbSize - 4, height: thumbSize - 4))
         }
-
         playbackSlider.setThumbImage(thumbImage, for: .normal)
+
         playbackSlider.addTarget(self, action: #selector(sliderTouchBegan(_:)), for: .touchDown)
         playbackSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         playbackSlider.addTarget(self, action: #selector(sliderTouchUp(_:)), for: [.touchUpInside, .touchUpOutside])
-    }
-
-    private func setupGestures() {
-        [leftImageView, share, favourite, playView, backView, forwardView, repeatView].forEach { $0?.isUserInteractionEnabled = true }
-        leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleBackTap)))
-        share.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleShare)))
-        favourite.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleFavourite)))
-        playView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePlayPause)))
-        backView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePrevious)))
-        forwardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNext)))
-        repeatView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRepeat)))
-    }
-    private func updateRepeatUI() {
-        let isEnabled = audioManager.isRepeatEnabled
-        repeatView.tintColor = isEnabled ? .systemPurple : .label
-        repeatView.image = UIImage(systemName: isEnabled ? "repeat.1" : "repeat")
-    }
-
-    @objc private func handleRepeat() {
-        audioManager.isRepeatEnabled.toggle()
-        updateRepeatUI()
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 
     private func startPlaybackTimer() {
@@ -154,23 +159,19 @@ class MusicPlayerVC: UIViewController {
     }
 
     private func updateSliderProgress() {
-        if isUserSeeking { return }
-        let currentTime = audioManager.currentTime
+        guard !isUserSeeking else { return }
+
+        let current = audioManager.currentTime
         let duration = audioManager.duration
 
         guard duration > 0, !duration.isNaN else { return }
 
         playbackSlider.maximumValue = Float(duration)
-        playbackSlider.setValue(Float(currentTime), animated: false)
-        currentTimeLabel.text = formatTime(seconds: currentTime)
-        durationLabel.text = formatTime(seconds: duration)
-    }
+        playbackSlider.setValue(Float(current), animated: false)
 
-    private func formatTime(seconds: Double) -> String {
-        if seconds.isNaN || seconds.isInfinite { return "0:00" }
-        let mins = Int(seconds) / 60
-        let secs = Int(seconds) % 60
-        return String(format: "%d:%02d", mins, secs)
+        // Use VM for formatting strings
+        currentTimeLabel.text = vm.formatTime(seconds: current)
+        durationLabel.text = vm.formatTime(seconds: duration)
     }
 
     @objc private func sliderTouchBegan(_ sender: UISlider) {
@@ -178,7 +179,7 @@ class MusicPlayerVC: UIViewController {
     }
 
     @objc private func sliderValueChanged(_ sender: UISlider) {
-        currentTimeLabel.text = formatTime(seconds: Double(sender.value))
+        currentTimeLabel.text = vm.formatTime(seconds: Double(sender.value))
     }
 
     @objc private func sliderTouchUp(_ sender: UISlider) {
@@ -186,13 +187,29 @@ class MusicPlayerVC: UIViewController {
         isUserSeeking = false
     }
 
+    // MARK: - Other Gestures
+    private func setupGestures() {
+        [leftImageView, share, favourite, playView, backView, forwardView, repeatView].forEach {
+            $0?.isUserInteractionEnabled = true
+        }
+
+        leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleBackTap)))
+        share.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleShare)))
+        favourite.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleFavourite)))
+        playView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePlayPause)))
+        backView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePrevious)))
+        forwardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNext)))
+        repeatView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRepeat)))
+    }
+
     @objc private func handleBackTap() {
         dismiss(animated: true)
     }
 
     @objc private func handleShare() {
-        guard let podcast = vm?.getCurrentPodcast() else { return }
-        let ac = UIActivityViewController(activityItems: ["Check out: \(podcast.title)"], applicationActivities: nil)
+        guard let podcast = audioManager.currentPodcast else { return }
+        let items = ["Check out this podcast: \(podcast.title)"]
+        let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
         present(ac, animated: true)
     }
 

@@ -12,14 +12,13 @@ class PodcastDiscoveryVC: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchbarView: SearchBarView!
 
-    private var vm: PodcastDiscoveryVM?
+    // Get the VM from the TabBar safely
+    private var vm: PodcastDiscoveryVM? {
+        return (tabBarController as? MainTabBarController)?.discoveryVM
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if let tabBar = tabBarController as? MainTabBarController {
-            self.vm = tabBar.vm
-        }
         setupCollectionView()
         observeAudioChanges()
     }
@@ -30,6 +29,7 @@ class PodcastDiscoveryVC: UIViewController {
     }
 
     private func observeAudioChanges() {
+        // Refresh UI when a track starts (to show which one is playing)
         AudioPlayerManager.shared.onTrackStarted = { [weak self] _ in
             DispatchQueue.main.async {
                 self?.collectionView.reloadData()
@@ -47,6 +47,11 @@ class PodcastDiscoveryVC: UIViewController {
     private func setupCollectionView() {
         let headerNib = UINib(nibName: "TrendingHeader", bundle: nil)
         collectionView.register(headerNib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "TrendingHeader")
+
+        // Delegate and DataSource usually set in Storyboard, but good to ensure here
+        collectionView.delegate = self
+        collectionView.dataSource = self
+
         collectionView.setCollectionViewLayout(PodcastLayoutFactory.createDiscoveryLayout(), animated: false)
     }
 
@@ -55,6 +60,7 @@ class PodcastDiscoveryVC: UIViewController {
     }
 }
 
+// MARK: - TrendingHeaderDelegate
 extension PodcastDiscoveryVC: TrendingHeaderDelegate {
 
     func didTapTrendingHeaderLeft(for title: String) {
@@ -67,6 +73,7 @@ extension PodcastDiscoveryVC: TrendingHeaderDelegate {
            let headerTitle = sender as? String {
 
             destinationVC.hidesBottomBarWhenPushed = false
+            // Passing filtered data based on header title
             destinationVC.podcasts = (headerTitle == "Trending Podcast") ? (vm?.filteredTrendingPodcasts ?? []) : (vm?.filteredFavouritePodcasts ?? [])
         }
     }
@@ -94,7 +101,7 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrendingHeader.reuseIdentifier, for: indexPath) as? TrendingHeader else {
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "TrendingHeader", for: indexPath) as? TrendingHeader else {
             return UICollectionReusableView()
         }
         header.delegate = self
@@ -123,7 +130,7 @@ extension PodcastDiscoveryVC {
     }
 
     private func configureCategoryCell(at indexPath: IndexPath) -> CategoryCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCell.reuseIdentifier, for: indexPath) as! CategoryCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
         if let vm = vm {
             let category = vm.categories[indexPath.item]
             cell.configure(text: category.rawValue, isSelected: indexPath.item == vm.selectedCategoryIndex)
@@ -132,7 +139,7 @@ extension PodcastDiscoveryVC {
     }
 
     private func configureTrendingCell(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrendingCell.reuseIdentifier, for: indexPath) as! TrendingCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrendingCell", for: indexPath) as! TrendingCell
         if let vm = vm {
             let podcast = vm.filteredTrendingPodcasts[indexPath.item]
             cell.configure(with: podcast)
@@ -141,7 +148,7 @@ extension PodcastDiscoveryVC {
     }
 
     private func configureFavouriteCell(at indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrendingCell.reuseIdentifier, for: indexPath) as! TrendingCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrendingCell", for: indexPath) as! TrendingCell
         if let vm = vm {
             let podcast = vm.filteredFavouritePodcasts[indexPath.item]
             cell.configure(with: podcast)
@@ -156,7 +163,7 @@ extension PodcastDiscoveryVC {
     func handleSelection(at indexPath: IndexPath) {
         switch indexPath.section {
         case 0: handleCategorySelection(at: indexPath)
-        case 1,2: handlePodcastSelection(at: indexPath)
+        case 1, 2: handlePodcastSelection(at: indexPath)
         default: break
         }
     }
@@ -173,12 +180,15 @@ extension PodcastDiscoveryVC {
     private func handlePodcastSelection(at indexPath: IndexPath) {
         guard let vm = vm else { return }
 
+        // Determine which list the user is playing from
         let list = (indexPath.section == 1) ? vm.filteredTrendingPodcasts : vm.filteredFavouritePodcasts
         let selectedPodcast = list[indexPath.item]
 
-        if let mainTabBar = self.tabBarController as? MainTabBarController {
-            mainTabBar.updateMiniPlayer(with: selectedPodcast, from: list)
-        }
+        // 1. Update the "Global Queue" in the discovery VM so the TabBar knows what's next
+        vm.currentList = list
+
+        // 2. Play using the Manager directly
+        AudioPlayerManager.shared.play(podcast: selectedPodcast)
 
         collectionView.reloadData()
     }

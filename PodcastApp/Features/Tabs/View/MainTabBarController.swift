@@ -6,25 +6,88 @@
 //
 
 import UIKit
-import AVFoundation
 
 class MainTabBarController: UITabBarController {
 
     private var miniPlayer: MiniPlayerView?
-    let vm = PodcastDiscoveryVM()
     private let audioManager = AudioPlayerManager.shared
-    
+    let discoveryVM = PodcastDiscoveryVM()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMiniPlayerUI()
-        bindPlayerState()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // RE-BIND: If the FullPlayer took over the listeners, we take them back here
         bindPlayerState()
+        // SYNC: Ensure UI reflects current state immediately upon returning
         syncMiniPlayerUI()
+    }
+
+    private func bindPlayerState() {
+        audioManager.onTrackStarted = { [weak self] _ in
+            self?.syncMiniPlayerUI()
+        }
+
+        audioManager.onStateChange = { [weak self] _ in
+            self?.syncMiniPlayerUI()
+        }
+
+        audioManager.onTrackFinished = { [weak self] in
+            guard let self = self else { return }
+            self.audioManager.isRepeatEnabled ? self.handleRepeat() : self.autoPlayNext()
+        }
+    }
+
+    private func handleRepeat() {
+        audioManager.seek(to: 0)
+        audioManager.resume()
+    }
+
+    func autoPlayNext() {
+        let list = discoveryVM.currentList
+        guard let current = audioManager.currentPodcast,
+              let index = list.firstIndex(where: { $0.id == current.id }),
+              index < list.count - 1 else { return }
+        audioManager.play(podcast: list[index + 1])
+    }
+
+    func autoPlayPrevious() {
+        let list = discoveryVM.currentList
+        guard let current = audioManager.currentPodcast,
+              let index = list.firstIndex(where: { $0.id == current.id }),
+              index > 0 else { return }
+        audioManager.play(podcast: list[index - 1])
+    }
+
+    private func syncMiniPlayerUI() {
+        guard let podcast = audioManager.currentPodcast else {
+            miniPlayer?.isHidden = true
+            return
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, let player = self.miniPlayer else { return }
+
+            player.isHidden = false
+
+            // Handle Next/Previous button dimming
+            let list = self.discoveryVM.currentList
+            if let index = list.firstIndex(where: { $0.id == podcast.id }) {
+                player.previousSong.alpha = index > 0 ? 1.0 : 0.3
+                player.nextSongView.alpha = index < list.count - 1 ? 1.0 : 0.3
+            }
+
+            // Update loading/playing state
+            // Manager should provide these booleans
+            player.configure(
+                with: podcast,
+                isPlaying: self.audioManager.isPlaying,
+                isLoading: false // Change to self.audioManager.isBuffering if available
+            )
+        }
     }
 
     private func setupMiniPlayerUI() {
@@ -33,7 +96,7 @@ class MainTabBarController: UITabBarController {
 
         view.addSubview(player)
         miniPlayer = player
-        player.previousSong.transform = CGAffineTransform(scaleX: -1, y: 1)
+        player.isHidden = true
         player.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -43,82 +106,30 @@ class MainTabBarController: UITabBarController {
             player.bottomAnchor.constraint(equalTo: tabBar.topAnchor)
         ])
 
-        player.isHidden = true
-        setupMiniPlayerActions()
-    }
+        // Callbacks
+        player.didTapPlay = { [weak self] in
+            guard let self = self else { return }
+            self.audioManager.isPlaying ? self.audioManager.pause() : self.audioManager.resume()
+        }
 
-    private func setupMiniPlayerActions() {
-        miniPlayer?.didTapPlay = { [weak self] in
-            self?.vm.togglePlayPause()
-            self?.syncMiniPlayerUI()
+        player.didTapNext = { [weak self] in
+            self?.autoPlayNext()
         }
-        miniPlayer?.didTapNext = { [weak self] in
-            self?.vm.playNext()
+
+        player.didTapPrevious = { [weak self] in
+            self?.autoPlayPrevious()
         }
-        miniPlayer?.didTapPrevious = { [weak self] in
-            self?.vm.playPrevious()
-        }
-        miniPlayer?.didTapBackground = { [weak self] in
+
+        player.didTapBackground = { [weak self] in
             self?.openFullPlayer()
         }
     }
 
-    func updateMiniPlayer(with podcast: Podcast, from list: [Podcast]) {
-        vm.playPodcast(podcast, from: list)
-        syncMiniPlayerUI()
-    }
-
-    private func syncMiniPlayerUI() {
-        guard let podcast = vm.getCurrentPodcast() else { return }
-        let index = vm.getPlayingIndex(in: vm.currentList) ?? 0
-
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self, let player = self.miniPlayer else { return }
-
-            player.isHidden = false
-            player.configure(with: podcast)
-
-            let isPlaying = self.audioManager.isPlaying
-            let imageName = isPlaying ? "pause.fill" : "play.fill"
-            player.playView.image = UIImage(systemName: imageName)
-
-            player.previousSong.alpha = (index > 0) ? 1.0 : 0.3
-            self.view.bringSubviewToFront(player)
-        }
-    }
-
-    private func bindPlayerState() {
-        audioManager.onStateChange = { [weak self] _ in
-            DispatchQueue.main.async {
-                guard let self = self, let miniPlayer = self.miniPlayer else { return }
-                let isPlaying = self.audioManager.isPlaying
-                let imageName = isPlaying ? "pause.fill" : "play.fill"
-                miniPlayer.playView.image = UIImage(systemName: imageName)
-            }
-        }
-
-        audioManager.onTrackStarted = { [weak self] _ in
-            self?.syncMiniPlayerUI()
-        }
-
-        audioManager.onTrackFinished = { [weak self] in
-            guard let self = self else { return }
-
-            if self.audioManager.isRepeatEnabled {
-                self.audioManager.seek(to: 0)
-                self.audioManager.resume()
-                self.syncMiniPlayerUI()
-            } else {
-                self.vm.playNext()
-            }
-        }
-
-    }
-
-    private func openFullPlayer() {
+    func openFullPlayer() {
         let storyboard = UIStoryboard(name: "PodcastDiscovery", bundle: nil)
         if let vc = storyboard.instantiateViewController(withIdentifier: "MusicPlayerVC") as? MusicPlayerVC {
-            vc.vm = self.vm
+            // Ensure the Full Player gets the latest list
+            vc.vm = MusicPlayerVM(list: discoveryVM.currentList)
             vc.modalPresentationStyle = .fullScreen
             self.present(vc, animated: true)
         }
