@@ -8,7 +8,7 @@
 import Foundation
 
 class PodcastDiscoveryVM {
-    
+
     var selectedCategoryIndex: Int = 0
     var categories = CategoryType.allCases
     let totalSections: Int = 3
@@ -34,7 +34,6 @@ class PodcastDiscoveryVM {
         self.selectedCategoryIndex = index
     }
 
-    /// Updates the current active playlist (called when a user taps a podcast in a specific section)
     func updateCurrentList(_ list: [Podcast]) {
         self.currentList = list
     }

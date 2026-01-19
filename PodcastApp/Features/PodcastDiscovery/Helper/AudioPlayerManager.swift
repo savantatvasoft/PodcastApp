@@ -15,11 +15,9 @@ final class AudioPlayerManager {
     private var player: AVPlayer?
     private var timeControlObserver: NSKeyValueObservation?
 
-    // Global State
     var isRepeatEnabled: Bool = false
     private(set) var currentPodcast: Podcast?
 
-    // Callbacks for UI updates
     var onTrackFinished: (() -> Void)?
     var onStateChange: ((AVPlayer.TimeControlStatus) -> Void)?
     var onTrackStarted: ((Podcast) -> Void)?

@@ -12,7 +12,6 @@ class PodcastDiscoveryVC: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchbarView: SearchBarView!
 
-    // Get the VM from the TabBar safely
     private var vm: PodcastDiscoveryVM? {
         return (tabBarController as? MainTabBarController)?.discoveryVM
     }
@@ -29,7 +28,6 @@ class PodcastDiscoveryVC: UIViewController {
     }
 
     private func observeAudioChanges() {
-        // Refresh UI when a track starts (to show which one is playing)
         AudioPlayerManager.shared.onTrackStarted = { [weak self] _ in
             DispatchQueue.main.async {
                 self?.collectionView.reloadData()
@@ -47,8 +45,6 @@ class PodcastDiscoveryVC: UIViewController {
     private func setupCollectionView() {
         let headerNib = UINib(nibName: "TrendingHeader", bundle: nil)
         collectionView.register(headerNib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "TrendingHeader")
-
-        // Delegate and DataSource usually set in Storyboard, but good to ensure here
         collectionView.delegate = self
         collectionView.dataSource = self
 
@@ -71,9 +67,7 @@ extension PodcastDiscoveryVC: TrendingHeaderDelegate {
         if segue.identifier == "showPodcastList",
            let destinationVC = segue.destination as? PodcastListVC,
            let headerTitle = sender as? String {
-
             destinationVC.hidesBottomBarWhenPushed = false
-            // Passing filtered data based on header title
             destinationVC.podcasts = (headerTitle == "Trending Podcast") ? (vm?.filteredTrendingPodcasts ?? []) : (vm?.filteredFavouritePodcasts ?? [])
         }
     }
@@ -89,10 +83,10 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let vm = vm else { return 0 }
         switch section {
-            case 0: return vm.categories.count
-            case 1: return vm.filteredTrendingPodcasts.count
-            case 2: return vm.filteredFavouritePodcasts.count
-            default: return 0
+        case 0: return vm.categories.count
+        case 1: return vm.filteredTrendingPodcasts.count
+        case 2: return vm.filteredFavouritePodcasts.count
+        default: return 0
         }
     }
 
@@ -179,17 +173,10 @@ extension PodcastDiscoveryVC {
 
     private func handlePodcastSelection(at indexPath: IndexPath) {
         guard let vm = vm else { return }
-
-        // Determine which list the user is playing from
         let list = (indexPath.section == 1) ? vm.filteredTrendingPodcasts : vm.filteredFavouritePodcasts
         let selectedPodcast = list[indexPath.item]
-
-        // 1. Update the "Global Queue" in the discovery VM so the TabBar knows what's next
         vm.currentList = list
-
-        // 2. Play using the Manager directly
         AudioPlayerManager.shared.play(podcast: selectedPodcast)
-
         collectionView.reloadData()
     }
 }

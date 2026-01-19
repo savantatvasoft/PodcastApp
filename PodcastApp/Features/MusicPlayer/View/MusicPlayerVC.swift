@@ -49,7 +49,6 @@ class MusicPlayerVC: UIViewController {
 
     // MARK: - Setup
     private func setupUI() {
-        // We now get current data from the AudioManager (Source of Truth)
         guard let podcast = audioManager.currentPodcast else { return }
 
         label.text = podcast.title
@@ -73,7 +72,6 @@ class MusicPlayerVC: UIViewController {
         audioManager.onTrackStarted = { [weak self] _ in
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                // Reset slider immediately when a new track starts
                 self.playbackSlider.value = 0
                 self.currentTimeLabel.text = "0:00"
                 self.setupUI()
@@ -94,7 +92,6 @@ class MusicPlayerVC: UIViewController {
     }
 
     private func updateNavigationButtons() {
-        // Get navigation logic from VM
         let index = vm.getPlayingIndex() ?? 0
 
         let hasPrevious = index > 0
@@ -137,7 +134,6 @@ class MusicPlayerVC: UIViewController {
         playbackSlider.minimumValue = 0
         playbackSlider.isContinuous = true
 
-        // Custom Thumb setup
         let thumbSize: CGFloat = 24
         let renderer = UIGraphicsImageRenderer(size: CGSize(width: thumbSize, height: thumbSize))
         let thumbImage = renderer.image { context in
@@ -168,8 +164,6 @@ class MusicPlayerVC: UIViewController {
 
         playbackSlider.maximumValue = Float(duration)
         playbackSlider.setValue(Float(current), animated: false)
-
-        // Use VM for formatting strings
         currentTimeLabel.text = vm.formatTime(seconds: current)
         durationLabel.text = vm.formatTime(seconds: duration)
     }

@@ -23,7 +23,6 @@ class TrendingHeader: UICollectionReusableView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
     @IBAction func onPressLeft(_ sender: Any) {

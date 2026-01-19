@@ -22,10 +22,9 @@ class PodcastListVC: UIViewController {
     private func setupCollectionView() {
         let headerNib = UINib(nibName: "Header", bundle: nil)
         collctionView.register(headerNib,
-                              forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                              withReuseIdentifier: Header.reuseIdentifier)
+                               forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                               withReuseIdentifier: Header.reuseIdentifier)
 
-        // Set delegates if not done in Storyboard
         collctionView.dataSource = self
         collctionView.delegate = self
 
@@ -37,7 +36,6 @@ class PodcastListVC: UIViewController {
     }
 
     private func observeAudioChanges() {
-        // Refresh when track changes (e.g., user clicks 'Next' in MiniPlayer)
         AudioPlayerManager.shared.onTrackStarted = { [weak self] _ in
             DispatchQueue.main.async {
                 self?.syncSelectedIndex()
@@ -47,7 +45,6 @@ class PodcastListVC: UIViewController {
     }
 
     private func syncSelectedIndex() {
-        // Find the index of the currently playing podcast in our local list
         guard let currentID = AudioPlayerManager.shared.currentPodcast?.id else { return }
         selectedIndex = podcasts.firstIndex(where: { $0.id == currentID })
     }
@@ -70,8 +67,6 @@ extension PodcastListVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PodcastListCell", for: indexPath) as! PodcastListCell
         let podcast = podcasts[indexPath.item]
-
-        // Check if this specific podcast is the one playing globally
         let currentPlayingID = AudioPlayerManager.shared.currentPodcast?.id
         let isSelected = (podcast.id == currentPlayingID)
 
@@ -99,13 +94,9 @@ extension PodcastListVC: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedPodcast = podcasts[indexPath.item]
-
-        // 1. Update the Global Discovery VM list so the player knows the sequence
         if let mainTabBar = self.tabBarController as? MainTabBarController {
             mainTabBar.discoveryVM.updateCurrentList(podcasts)
         }
-
-        // 2. Play using the Global Manager
         AudioPlayerManager.shared.play(podcast: selectedPodcast)
 
         collectionView.reloadData()
