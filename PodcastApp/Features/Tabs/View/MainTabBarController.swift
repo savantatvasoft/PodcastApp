@@ -11,14 +11,20 @@ import AVFoundation
 class MainTabBarController: UITabBarController {
 
     private var miniPlayer: MiniPlayerView?
-    private var currentIndex = 0
-    private var podcasts: [Podcast] = []
+    let vm = PodcastDiscoveryVM()
     private let audioManager = AudioPlayerManager.shared
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMiniPlayerUI()
         bindPlayerState()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        bindPlayerState()
+        syncMiniPlayerUI()
     }
 
     private func setupMiniPlayerUI() {
@@ -27,10 +33,9 @@ class MainTabBarController: UITabBarController {
 
         view.addSubview(player)
         miniPlayer = player
-
         player.previousSong.transform = CGAffineTransform(scaleX: -1, y: 1)
-
         player.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             player.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             player.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -44,81 +49,69 @@ class MainTabBarController: UITabBarController {
 
     private func setupMiniPlayerActions() {
         miniPlayer?.didTapPlay = { [weak self] in
-            guard let self = self else { return }
-            self.audioManager.isPlaying ? self.audioManager.pause() : self.audioManager.resume()
+            self?.vm.togglePlayPause()
+            self?.syncMiniPlayerUI()
         }
-
         miniPlayer?.didTapNext = { [weak self] in
-            guard let self = self, !self.podcasts.isEmpty else { return }
-            self.currentIndex = (self.currentIndex + 1) % self.podcasts.count
-            self.syncPlayerState()
+            self?.vm.playNext()
         }
-
         miniPlayer?.didTapPrevious = { [weak self] in
-            guard let self = self, !self.podcasts.isEmpty else { return }
-            if self.currentIndex > 0 {
-                self.currentIndex -= 1
-                self.syncPlayerState()
-            }
+            self?.vm.playPrevious()
         }
-
         miniPlayer?.didTapBackground = { [weak self] in
-            self?.performSegue(withIdentifier: "showFullPlayer", sender: self)
+            self?.openFullPlayer()
         }
-    }
-
-    private func syncPlayerState() {
-        guard let miniPlayer = miniPlayer, currentIndex < podcasts.count else { return }
-        let podcast = podcasts[currentIndex]
-
-        let canGoBack = currentIndex > 0
-        miniPlayer.previousSong.alpha = canGoBack ? 1.0 : 0.3
-
-        miniPlayer.configure(with: podcast)
-        audioManager.stop()
-        audioManager.play(podcast: podcast)
     }
 
     func updateMiniPlayer(with podcast: Podcast, from list: [Podcast]) {
-        guard let miniPlayer = miniPlayer else { return }
-        self.podcasts = list
+        vm.playPodcast(podcast, from: list)
+        syncMiniPlayerUI()
+    }
 
-        if let index = self.podcasts.firstIndex(where: { $0.id == podcast.id }) {
-            currentIndex = index
+    private func syncMiniPlayerUI() {
+        guard let podcast = vm.getCurrentPodcast() else { return }
+        let index = vm.getPlayingIndex(in: vm.currentList) ?? 0
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, let player = self.miniPlayer else { return }
+
+            player.isHidden = false
+            player.configure(with: podcast)
+
+            let isPlaying = self.audioManager.isPlaying
+            let imageName = isPlaying ? "pause.fill" : "play.fill"
+            player.playView.image = UIImage(systemName: imageName)
+
+            player.previousSong.alpha = (index > 0) ? 1.0 : 0.3
+            self.view.bringSubviewToFront(player)
         }
-
-        miniPlayer.previousSong.alpha = (currentIndex > 0) ? 1.0 : 0.3
-        miniPlayer.configure(with: podcast)
-        miniPlayer.isHidden = false
-        audioManager.play(podcast: podcast)
     }
 
     private func bindPlayerState() {
-        audioManager.onStateChange = { [weak self] state in
-            guard let self, let miniPlayer = self.miniPlayer else { return }
+        audioManager.onStateChange = { [weak self] _ in
             DispatchQueue.main.async {
-                switch state {
-                case .playing:
-                    miniPlayer.playView.image = UIImage(systemName: "pause.fill")
-                case .paused:
-                    miniPlayer.playView.image = UIImage(systemName: "play.fill")
-                case .waitingToPlayAtSpecifiedRate:
-                    miniPlayer.playView.image = UIImage(systemName: "hourglass")
-                @unknown default:
-                    break
-                }
+                guard let self = self, let miniPlayer = self.miniPlayer else { return }
+                let isPlaying = self.audioManager.isPlaying
+                let imageName = isPlaying ? "pause.fill" : "play.fill"
+                miniPlayer.playView.image = UIImage(systemName: imageName)
             }
+        }
+
+        audioManager.onTrackStarted = { [weak self] _ in
+            self?.syncMiniPlayerUI()
+        }
+
+        audioManager.onTrackFinished = { [weak self] in
+            self?.vm.playNext()
         }
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showFullPlayer" {
-            if let destinationVC = segue.destination as? MusicPlayerVC {
-
-                destinationVC.currentPodcast = podcasts[currentIndex]
-                destinationVC.podcastList = podcasts
-                destinationVC.currentIndex = currentIndex
-            }
+    private func openFullPlayer() {
+        let storyboard = UIStoryboard(name: "PodcastDiscovery", bundle: nil)
+        if let vc = storyboard.instantiateViewController(withIdentifier: "MusicPlayerVC") as? MusicPlayerVC {
+            vc.vm = self.vm
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true)
         }
     }
 }

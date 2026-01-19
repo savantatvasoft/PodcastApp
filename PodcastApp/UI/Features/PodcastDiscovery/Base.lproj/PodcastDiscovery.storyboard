@@ -419,17 +419,13 @@
                                                         <rect key="frame" x="337" y="17" width="24" height="21"/>
                                                         <color key="tintColor" name="Label"/>
                                                         <constraints>
+                                                            <constraint firstAttribute="width" secondItem="mtq-WQ-OFs" secondAttribute="height" multiplier="1:1" id="6t8-hD-42m"/>
                                                             <constraint firstAttribute="width" constant="24" id="IMp-MA-jOq"/>
-                                                            <constraint firstAttribute="height" constant="24" id="hSi-ot-Mop"/>
                                                         </constraints>
                                                     </imageView>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrowshape.turn.up.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="zaf-wH-Aal">
                                                         <rect key="frame" x="303" y="16.666666666666664" width="24" height="21.000000000000007"/>
                                                         <color key="tintColor" name="Label"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="24" id="5AY-Gk-ZPA"/>
-                                                            <constraint firstAttribute="width" constant="24" id="Ceq-Ux-xTt"/>
-                                                        </constraints>
                                                     </imageView>
                                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="O32-6t-xlI">
                                                         <rect key="frame" x="0.0" y="93.666666666666629" width="361" height="30"/>
@@ -455,19 +451,27 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shuffle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iGS-de-Kqs">
-                                                        <rect key="frame" x="0.0" y="187.00000000000003" width="30" height="27"/>
+                                                        <rect key="frame" x="0.0" y="187.00000000000003" width="35" height="32"/>
                                                         <color key="tintColor" name="Label"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="iGS-de-Kqs" secondAttribute="height" multiplier="1:1" id="ZWt-LQ-boM"/>
-                                                            <constraint firstAttribute="width" constant="30" id="cI6-tU-kCS"/>
+                                                            <constraint firstAttribute="width" constant="35" id="cI6-tU-kCS"/>
                                                         </constraints>
                                                     </imageView>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="star" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="vfK-v1-aJy">
-                                                        <rect key="frame" x="337" y="185.00000000000003" width="24" height="23.666666666666657"/>
+                                                        <rect key="frame" x="333" y="185.00000000000003" width="28" height="27.666666666666657"/>
                                                         <color key="tintColor" name="Label"/>
                                                     </imageView>
-                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="VU5-LI-mWd">
-                                                        <rect key="frame" x="24" y="186.00000000000003" width="313" height="19"/>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="play.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="yWy-pt-nfo">
+                                                        <rect key="frame" x="163" y="186.00000000000003" width="35" height="33.666666666666657"/>
+                                                        <color key="tintColor" name="Label"/>
+                                                    </imageView>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="backward.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cI6-CO-Rlu">
+                                                        <rect key="frame" x="112" y="188.00000000000003" width="35" height="29.666666666666686"/>
+                                                        <color key="tintColor" name="Label"/>
+                                                    </imageView>
+                                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="forward.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="cxT-Vb-xhy">
+                                                        <rect key="frame" x="214" y="188.00000000000003" width="35" height="29.666666666666686"/>
                                                         <color key="tintColor" name="Label"/>
                                                     </imageView>
                                                 </subviews>
@@ -476,33 +480,42 @@
                                                     <constraint firstItem="GCV-xK-ka7" firstAttribute="top" secondItem="O32-6t-xlI" secondAttribute="bottom" constant="5" id="1Ye-Ar-mEx"/>
                                                     <constraint firstItem="mtq-WQ-OFs" firstAttribute="top" secondItem="eqV-He-Iem" secondAttribute="top" constant="15" id="5b1-pl-KeM"/>
                                                     <constraint firstItem="FrG-e9-AXI" firstAttribute="leading" secondItem="eqV-He-Iem" secondAttribute="leading" id="78O-Bk-Tbf"/>
+                                                    <constraint firstItem="yWy-pt-nfo" firstAttribute="top" secondItem="IKy-u0-E7X" secondAttribute="bottom" constant="40" id="8ws-SU-dDf"/>
                                                     <constraint firstAttribute="trailing" secondItem="mtq-WQ-OFs" secondAttribute="trailing" id="9Fq-x7-c67"/>
+                                                    <constraint firstItem="zaf-wH-Aal" firstAttribute="width" secondItem="mtq-WQ-OFs" secondAttribute="width" id="AmD-bV-zaI"/>
                                                     <constraint firstItem="O32-6t-xlI" firstAttribute="leading" secondItem="eqV-He-Iem" secondAttribute="leading" id="BCg-Y2-JFN"/>
+                                                    <constraint firstItem="zaf-wH-Aal" firstAttribute="height" secondItem="mtq-WQ-OFs" secondAttribute="height" id="Bw5-uX-Arh"/>
                                                     <constraint firstItem="gqP-h7-BWA" firstAttribute="top" secondItem="eqV-He-Iem" secondAttribute="top" constant="10" id="CGQ-Gr-yO0"/>
-                                                    <constraint firstItem="VU5-LI-mWd" firstAttribute="width" secondItem="iGS-de-Kqs" secondAttribute="width" multiplier="10.4333" id="DGv-8L-VPh"/>
+                                                    <constraint firstItem="cI6-CO-Rlu" firstAttribute="width" secondItem="iGS-de-Kqs" secondAttribute="width" id="DiU-GL-w7k"/>
+                                                    <constraint firstItem="cxT-Vb-xhy" firstAttribute="height" secondItem="iGS-de-Kqs" secondAttribute="height" id="Hu3-LE-Aas"/>
                                                     <constraint firstAttribute="trailing" secondItem="vfK-v1-aJy" secondAttribute="trailing" id="K23-QG-GTK"/>
+                                                    <constraint firstItem="yWy-pt-nfo" firstAttribute="width" secondItem="iGS-de-Kqs" secondAttribute="width" id="NcX-RS-Xup"/>
                                                     <constraint firstItem="vfK-v1-aJy" firstAttribute="width" secondItem="iGS-de-Kqs" secondAttribute="width" multiplier="0.8" id="P04-Z9-A5K"/>
-                                                    <constraint firstItem="vfK-v1-aJy" firstAttribute="leading" secondItem="VU5-LI-mWd" secondAttribute="trailing" id="Qlx-9T-ZC1"/>
+                                                    <constraint firstItem="cxT-Vb-xhy" firstAttribute="width" secondItem="iGS-de-Kqs" secondAttribute="width" id="RBB-US-B0P"/>
                                                     <constraint firstItem="iGS-de-Kqs" firstAttribute="leading" secondItem="eqV-He-Iem" secondAttribute="leading" id="TeU-aU-WNu"/>
                                                     <constraint firstItem="vfK-v1-aJy" firstAttribute="top" secondItem="IKy-u0-E7X" secondAttribute="bottom" constant="40" id="Ton-am-3hm"/>
                                                     <constraint firstItem="GCV-xK-ka7" firstAttribute="leading" secondItem="eqV-He-Iem" secondAttribute="leading" id="VgG-DI-mtT"/>
                                                     <constraint firstItem="zaf-wH-Aal" firstAttribute="top" secondItem="eqV-He-Iem" secondAttribute="top" constant="15" id="WZU-yL-Ll0"/>
                                                     <constraint firstAttribute="trailing" secondItem="O32-6t-xlI" secondAttribute="trailing" id="XzT-dL-flu"/>
+                                                    <constraint firstItem="cI6-CO-Rlu" firstAttribute="top" secondItem="IKy-u0-E7X" secondAttribute="bottom" constant="40" id="aZU-cg-ZKM"/>
                                                     <constraint firstItem="iGS-de-Kqs" firstAttribute="top" secondItem="GCV-xK-ka7" secondAttribute="bottom" constant="40" id="aom-3g-iI0"/>
+                                                    <constraint firstItem="cxT-Vb-xhy" firstAttribute="top" secondItem="IKy-u0-E7X" secondAttribute="bottom" constant="40" id="d1i-I6-Eq9"/>
                                                     <constraint firstItem="FrG-e9-AXI" firstAttribute="top" secondItem="gqP-h7-BWA" secondAttribute="bottom" constant="5" id="da4-wf-Vvu"/>
-                                                    <constraint firstItem="VU5-LI-mWd" firstAttribute="top" secondItem="IKy-u0-E7X" secondAttribute="bottom" constant="40" id="gp4-QD-Drd"/>
+                                                    <constraint firstItem="yWy-pt-nfo" firstAttribute="height" secondItem="iGS-de-Kqs" secondAttribute="height" id="dvD-Hf-l1K"/>
                                                     <constraint firstItem="IKy-u0-E7X" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="GCV-xK-ka7" secondAttribute="trailing" constant="8" symbolic="YES" id="haD-4u-WVU"/>
                                                     <constraint firstItem="IKy-u0-E7X" firstAttribute="top" secondItem="O32-6t-xlI" secondAttribute="bottom" constant="5" id="i76-wY-F9e"/>
                                                     <constraint firstItem="IKy-u0-E7X" firstAttribute="width" secondItem="GCV-xK-ka7" secondAttribute="width" multiplier="0.84" id="jTy-tR-78Z"/>
                                                     <constraint firstItem="zaf-wH-Aal" firstAttribute="leading" secondItem="gqP-h7-BWA" secondAttribute="trailing" constant="10" id="jru-52-9uW"/>
                                                     <constraint firstItem="vfK-v1-aJy" firstAttribute="height" secondItem="iGS-de-Kqs" secondAttribute="height" multiplier="0.8" id="lce-hm-nVN"/>
+                                                    <constraint firstItem="yWy-pt-nfo" firstAttribute="centerX" secondItem="eqV-He-Iem" secondAttribute="centerX" id="lyn-Wh-mfL"/>
+                                                    <constraint firstItem="cI6-CO-Rlu" firstAttribute="height" secondItem="iGS-de-Kqs" secondAttribute="height" id="mUz-f4-OQo"/>
                                                     <constraint firstItem="mtq-WQ-OFs" firstAttribute="leading" secondItem="zaf-wH-Aal" secondAttribute="trailing" constant="10" id="mpw-C4-2QZ"/>
-                                                    <constraint firstItem="VU5-LI-mWd" firstAttribute="centerX" secondItem="eqV-He-Iem" secondAttribute="centerX" id="sWb-p9-Xma"/>
+                                                    <constraint firstItem="yWy-pt-nfo" firstAttribute="leading" secondItem="cI6-CO-Rlu" secondAttribute="trailing" constant="16" id="oJR-hJ-rHf"/>
                                                     <constraint firstAttribute="trailing" secondItem="IKy-u0-E7X" secondAttribute="trailing" id="seH-8L-B7I"/>
-                                                    <constraint firstItem="VU5-LI-mWd" firstAttribute="height" secondItem="iGS-de-Kqs" secondAttribute="height" multiplier="0.677778" id="sv2-vx-a9O"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="FrG-e9-AXI" secondAttribute="trailing" constant="20" symbolic="YES" id="tr0-ok-Sae"/>
                                                     <constraint firstItem="gqP-h7-BWA" firstAttribute="leading" secondItem="eqV-He-Iem" secondAttribute="leading" id="u12-lE-hg0"/>
                                                     <constraint firstItem="O32-6t-xlI" firstAttribute="top" secondItem="FrG-e9-AXI" secondAttribute="bottom" constant="30" id="zm1-KX-d1s"/>
+                                                    <constraint firstItem="cxT-Vb-xhy" firstAttribute="leading" secondItem="yWy-pt-nfo" secondAttribute="trailing" constant="16" id="zsM-Nh-Max"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -542,12 +555,15 @@
                     <navigationItem key="navigationItem" id="wi5-8t-WJp"/>
                     <connections>
                         <outlet property="author" destination="FrG-e9-AXI" id="PJT-MD-6tO"/>
+                        <outlet property="backView" destination="cI6-CO-Rlu" id="MEM-Pr-TyG"/>
                         <outlet property="banner" destination="oPw-Lv-nqO" id="XXB-1F-fBi"/>
                         <outlet property="currentTimeLabel" destination="GCV-xK-ka7" id="JeV-gE-r1B"/>
                         <outlet property="durationLabel" destination="IKy-u0-E7X" id="860-cG-2Yf"/>
                         <outlet property="favourite" destination="mtq-WQ-OFs" id="yNd-BN-xE5"/>
+                        <outlet property="forwardView" destination="cxT-Vb-xhy" id="z7u-Za-cct"/>
                         <outlet property="label" destination="gqP-h7-BWA" id="0uV-Dz-TQQ"/>
                         <outlet property="leftImageView" destination="5hd-VQ-Jyk" id="PFE-AH-Ig3"/>
+                        <outlet property="playView" destination="yWy-pt-nfo" id="xqf-Zj-6em"/>
                         <outlet property="playbackSlider" destination="O32-6t-xlI" id="ow7-zd-fdW"/>
                         <outlet property="share" destination="zaf-wH-Aal" id="WOi-Ed-kRf"/>
                     </connections>
@@ -663,7 +679,9 @@
     <resources>
         <image name="antenna.radiowaves.left.and.right" catalog="system" width="128" height="111"/>
         <image name="arrowshape.turn.up.right" catalog="system" width="128" height="104"/>
+        <image name="backward.fill" catalog="system" width="128" height="76"/>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
+        <image name="forward.fill" catalog="system" width="128" height="76"/>
         <image name="heart" catalog="system" width="128" height="107"/>
         <image name="house" catalog="system" width="128" height="104"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>

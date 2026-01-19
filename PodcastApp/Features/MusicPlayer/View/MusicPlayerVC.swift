@@ -10,14 +10,12 @@ import AVFoundation
 
 class MusicPlayerVC: UIViewController {
 
-    var currentPodcast: Podcast?
-    var podcastList: [Podcast] = []
-    var currentIndex: Int = 0
-    private var isFavorite: Bool = false
+    var vm: PodcastDiscoveryVM?
 
     private let audioManager = AudioPlayerManager.shared
     private var timer: Timer?
     private var isUserSeeking: Bool = false
+    private var isFavorite: Bool = false
 
     @IBOutlet weak var leftImageView: UIImageView!
     @IBOutlet weak var banner: UIImageView!
@@ -28,6 +26,9 @@ class MusicPlayerVC: UIViewController {
     @IBOutlet weak var playbackSlider: UISlider!
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var currentTimeLabel: UILabel!
+    @IBOutlet weak var playView: UIImageView!
+    @IBOutlet weak var backView: UIImageView!
+    @IBOutlet weak var forwardView: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,7 @@ class MusicPlayerVC: UIViewController {
         setupSlider()
         setupGestures()
         startPlaybackTimer()
+        setupManagerCallbacks()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -43,32 +45,70 @@ class MusicPlayerVC: UIViewController {
     }
 
     private func setupUI() {
-        guard let podcast = currentPodcast else { return }
+        guard let podcast = vm?.getCurrentPodcast() else { return }
+
         label.text = podcast.title
         author.text = podcast.author
         banner.loadImage(from: podcast.imageUrl)
-
         banner.layer.cornerRadius = 15
         banner.clipsToBounds = true
 
-        favourite.image = UIImage(systemName: "heart")
-        favourite.tintColor = .label
+        updatePlayPauseUI()
+        updateNavigationButtons()
+    }
 
-        currentTimeLabel.text = "0:00"
-        durationLabel.text = "--:--"
+    private func setupManagerCallbacks() {
+        audioManager.onStateChange = { [weak self] _ in
+            self?.updatePlayPauseUI()
+        }
+
+        audioManager.onTrackStarted = { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.setupUI()
+            }
+        }
+
+        audioManager.onTrackFinished = { [weak self] in
+            self?.vm?.playNext()
+        }
+    }
+
+    private func updatePlayPauseUI() {
+        let isPlaying = audioManager.isPlaying
+        let imageName = isPlaying ? "pause.circle.fill" : "play.circle.fill"
+        playView.image = UIImage(systemName: imageName)
+    }
+
+    @objc private func handlePlayPause() {
+        vm?.togglePlayPause()
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    }
+
+    @objc private func handleNext() {
+        vm?.playNext()
+        UISelectionFeedbackGenerator().selectionChanged()
+    }
+
+    @objc private func handlePrevious() {
+        vm?.playPrevious()
+        UISelectionFeedbackGenerator().selectionChanged()
+    }
+
+    private func updateNavigationButtons() {
+        guard let vm = vm else { return }
+        let index = vm.getPlayingIndex(in: vm.currentList) ?? 0
+
+        let hasPrevious = index > 0
+        backView.isUserInteractionEnabled = hasPrevious
+        backView.alpha = hasPrevious ? 1.0 : 0.3
+
+        let hasNext = index < vm.currentList.count - 1
+        forwardView.isUserInteractionEnabled = hasNext
+        forwardView.alpha = hasNext ? 1.0 : 0.3
     }
 
     private func setupSlider() {
-        var currentView: UIView? = playbackSlider
-        while currentView != nil {
-            currentView?.isUserInteractionEnabled = true
-            currentView = currentView?.superview
-        }
-        playbackSlider.superview?.bringSubviewToFront(playbackSlider)
-        playbackSlider.isUserInteractionEnabled = true
-        playbackSlider.isEnabled = true
         playbackSlider.minimumValue = 0
-        playbackSlider.value = 0
         playbackSlider.isContinuous = true
 
         let thumbSize: CGFloat = 24
@@ -80,55 +120,38 @@ class MusicPlayerVC: UIViewController {
         }
 
         playbackSlider.setThumbImage(thumbImage, for: .normal)
-        playbackSlider.setThumbImage(thumbImage, for: .highlighted)
-
         playbackSlider.addTarget(self, action: #selector(sliderTouchBegan(_:)), for: .touchDown)
         playbackSlider.addTarget(self, action: #selector(sliderValueChanged(_:)), for: .valueChanged)
         playbackSlider.addTarget(self, action: #selector(sliderTouchUp(_:)), for: [.touchUpInside, .touchUpOutside])
-        playbackSlider.addTarget(self, action: #selector(sliderTouchCancelled(_:)), for: .touchCancel)
     }
 
     private func setupGestures() {
-        [leftImageView, share, favourite].forEach { $0?.isUserInteractionEnabled = true }
-
+        [leftImageView, share, favourite, playView, backView, forwardView].forEach { $0?.isUserInteractionEnabled = true }
         leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleBackTap)))
         share.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleShare)))
         favourite.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleFavourite)))
+        playView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePlayPause)))
+        backView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePrevious)))
+        forwardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNext)))
     }
 
     private func startPlaybackTimer() {
-        timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             self?.updateSliderProgress()
         }
     }
 
     private func updateSliderProgress() {
-        if playbackSlider.isTracking {
-            return
-        }
-
+        if isUserSeeking { return }
         let currentTime = audioManager.currentTime
         let duration = audioManager.duration
 
-        guard duration > 0, !duration.isNaN else {
-            playbackSlider.maximumValue = 1
-            playbackSlider.value = 0
-            durationLabel.text = "--:--"
-            currentTimeLabel.text = "0:00"
-            return
-        }
+        guard duration > 0, !duration.isNaN else { return }
 
         playbackSlider.maximumValue = Float(duration)
         playbackSlider.setValue(Float(currentTime), animated: false)
-
         currentTimeLabel.text = formatTime(seconds: currentTime)
         durationLabel.text = formatTime(seconds: duration)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        playbackSlider.superview?.bringSubviewToFront(playbackSlider)
     }
 
     private func formatTime(seconds: Double) -> String {
@@ -138,46 +161,24 @@ class MusicPlayerVC: UIViewController {
         return String(format: "%d:%02d", mins, secs)
     }
 
-    @objc private func sliderTouchBegan(_ sender: UISlider) {
-        isUserSeeking = true
-    }
-
-    @objc private func sliderValueChanged(_ sender: UISlider) {
-        currentTimeLabel.text = formatTime(seconds: Double(sender.value))
-    }
-
+    @objc private func sliderTouchBegan(_ sender: UISlider) { isUserSeeking = true }
+    @objc private func sliderValueChanged(_ sender: UISlider) { currentTimeLabel.text = formatTime(seconds: Double(sender.value)) }
     @objc private func sliderTouchUp(_ sender: UISlider) {
-        let targetTime = Double(sender.value)
-        audioManager.seek(to: targetTime)
-        isUserSeeking = false
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
-    }
-
-    @objc private func sliderTouchCancelled(_ sender: UISlider) {
+        audioManager.seek(to: Double(sender.value))
         isUserSeeking = false
     }
 
-    @objc private func handleBackTap() {
-        self.dismiss(animated: true, completion: nil)
-    }
+    @objc private func handleBackTap() { dismiss(animated: true) }
 
     @objc private func handleShare() {
-        guard let podcast = currentPodcast else { return }
-        let items = ["Check out this episode: \(podcast.title)"]
-        let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        guard let podcast = vm?.getCurrentPodcast() else { return }
+        let ac = UIActivityViewController(activityItems: ["Check out: \(podcast.title)"], applicationActivities: nil)
         present(ac, animated: true)
     }
 
     @objc private func handleFavourite() {
         isFavorite.toggle()
-
-        let generator = UIImpactFeedbackGenerator(style: .medium)
-        generator.impactOccurred()
-
-        UIView.transition(with: favourite, duration: 0.2, options: .transitionCrossDissolve) {
-            self.favourite.image = UIImage(systemName: self.isFavorite ? "heart.fill" : "heart")
-            self.favourite.tintColor = self.isFavorite ? .systemRed : .label
-        }
+        favourite.image = UIImage(systemName: isFavorite ? "heart.fill" : "heart")
+        favourite.tintColor = isFavorite ? .systemRed : .label
     }
 }

@@ -50,13 +50,10 @@ class MiniPlayerView: UIView {
 
     @objc private func backgroundTapped(_ gesture: UITapGestureRecognizer) {
         let location = gesture.location(in: self)
-
-        // Check if the tap landed on any of the buttons
         let isButtonTouch = playView.frame.contains(location) ||
                            nextSongView.frame.contains(location) ||
                            previousSong.frame.contains(location)
 
-        // Only trigger background tap if NOT touching a button
         if !isButtonTouch {
             print("Background area tapped")
             didTapBackground?()
