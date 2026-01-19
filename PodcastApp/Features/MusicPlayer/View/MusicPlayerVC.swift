@@ -11,7 +11,7 @@ import AVFoundation
 class MusicPlayerVC: UIViewController {
 
     var vm: PodcastDiscoveryVM?
-
+    private var isRepeatEnabled: Bool = false
     private let audioManager = AudioPlayerManager.shared
     private var timer: Timer?
     private var isUserSeeking: Bool = false
@@ -29,6 +29,7 @@ class MusicPlayerVC: UIViewController {
     @IBOutlet weak var playView: UIImageView!
     @IBOutlet weak var backView: UIImageView!
     @IBOutlet weak var forwardView: UIImageView!
+    @IBOutlet weak var repeatView: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,11 +47,11 @@ class MusicPlayerVC: UIViewController {
 
     private func setupUI() {
         guard let podcast = vm?.getCurrentPodcast() else { return }
-
+        isRepeatEnabled = audioManager.isRepeatEnabled
         label.text = podcast.title
         author.text = podcast.author
         banner.loadImage(from: podcast.imageUrl)
-        banner.layer.cornerRadius = 15
+        banner.layer.cornerRadius = 7
         banner.clipsToBounds = true
 
         updatePlayPauseUI()
@@ -64,12 +65,11 @@ class MusicPlayerVC: UIViewController {
 
         audioManager.onTrackStarted = { [weak self] _ in
             DispatchQueue.main.async {
-                self?.setupUI()
+                guard let self = self else { return }
+                self.playbackSlider.value = 0
+                self.currentTimeLabel.text = "0:00"
+                self.setupUI()
             }
-        }
-
-        audioManager.onTrackFinished = { [weak self] in
-            self?.vm?.playNext()
         }
     }
 
@@ -126,13 +126,25 @@ class MusicPlayerVC: UIViewController {
     }
 
     private func setupGestures() {
-        [leftImageView, share, favourite, playView, backView, forwardView].forEach { $0?.isUserInteractionEnabled = true }
+        [leftImageView, share, favourite, playView, backView, forwardView, repeatView].forEach { $0?.isUserInteractionEnabled = true }
         leftImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleBackTap)))
         share.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleShare)))
         favourite.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleFavourite)))
         playView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePlayPause)))
         backView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlePrevious)))
         forwardView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleNext)))
+        repeatView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRepeat)))
+    }
+    private func updateRepeatUI() {
+        let isEnabled = audioManager.isRepeatEnabled
+        repeatView.tintColor = isEnabled ? .systemPurple : .label
+        repeatView.image = UIImage(systemName: isEnabled ? "repeat.1" : "repeat")
+    }
+
+    @objc private func handleRepeat() {
+        audioManager.isRepeatEnabled.toggle()
+        updateRepeatUI()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 
     private func startPlaybackTimer() {
@@ -161,14 +173,22 @@ class MusicPlayerVC: UIViewController {
         return String(format: "%d:%02d", mins, secs)
     }
 
-    @objc private func sliderTouchBegan(_ sender: UISlider) { isUserSeeking = true }
-    @objc private func sliderValueChanged(_ sender: UISlider) { currentTimeLabel.text = formatTime(seconds: Double(sender.value)) }
+    @objc private func sliderTouchBegan(_ sender: UISlider) {
+        isUserSeeking = true
+    }
+
+    @objc private func sliderValueChanged(_ sender: UISlider) {
+        currentTimeLabel.text = formatTime(seconds: Double(sender.value))
+    }
+
     @objc private func sliderTouchUp(_ sender: UISlider) {
         audioManager.seek(to: Double(sender.value))
         isUserSeeking = false
     }
 
-    @objc private func handleBackTap() { dismiss(animated: true) }
+    @objc private func handleBackTap() {
+        dismiss(animated: true)
+    }
 
     @objc private func handleShare() {
         guard let podcast = vm?.getCurrentPodcast() else { return }

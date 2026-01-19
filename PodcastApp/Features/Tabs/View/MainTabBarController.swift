@@ -102,8 +102,17 @@ class MainTabBarController: UITabBarController {
         }
 
         audioManager.onTrackFinished = { [weak self] in
-            self?.vm.playNext()
+            guard let self = self else { return }
+
+            if self.audioManager.isRepeatEnabled {
+                self.audioManager.seek(to: 0)
+                self.audioManager.resume()
+                self.syncMiniPlayerUI()
+            } else {
+                self.vm.playNext()
+            }
         }
+
     }
 
     private func openFullPlayer() {

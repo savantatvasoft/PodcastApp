@@ -14,6 +14,7 @@ final class AudioPlayerManager {
 
     private var player: AVPlayer?
     private var timeControlObserver: NSKeyValueObservation?
+    var isRepeatEnabled: Bool = false
 
     var onTrackFinished: (() -> Void)?
     var onStateChange: ((AVPlayer.TimeControlStatus) -> Void)?
