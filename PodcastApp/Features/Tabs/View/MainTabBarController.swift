@@ -16,6 +16,13 @@ class MainTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupMiniPlayerUI()
+
+        // Initialize the Notification Bar commands
+        audioManager.setupRemoteCommandCenter()
+
+        // Listen for the "Next/Prev" signals sent from the Notification Bar
+        NotificationCenter.default.addObserver(self, selector: #selector(autoPlayNext), name: NSNotification.Name("RemoteNext"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(autoPlayPrevious), name: NSNotification.Name("RemotePrev"), object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -25,12 +32,16 @@ class MainTabBarController: UITabBarController {
     }
 
     private func bindPlayerState() {
-        audioManager.onTrackStarted = { [weak self] _ in
+        audioManager.onTrackStarted = { [weak self] podcast in
             self?.syncMiniPlayerUI()
+            self?.audioManager.updateNowPlayingInfo(podcast: podcast)
         }
 
         audioManager.onStateChange = { [weak self] _ in
             self?.syncMiniPlayerUI()
+            if let current = self?.audioManager.currentPodcast {
+                        self?.audioManager.updateNowPlayingInfo(podcast: current)
+            }
         }
 
         audioManager.onTrackFinished = { [weak self] in
@@ -44,7 +55,7 @@ class MainTabBarController: UITabBarController {
         audioManager.resume()
     }
 
-    func autoPlayNext() {
+    @objc func autoPlayNext() {
         let list = discoveryVM.currentList
         guard let current = audioManager.currentPodcast,
               let index = list.firstIndex(where: { $0.id == current.id }),
@@ -52,7 +63,7 @@ class MainTabBarController: UITabBarController {
         audioManager.play(podcast: list[index + 1])
     }
 
-    func autoPlayPrevious() {
+    @objc func autoPlayPrevious() {
         let list = discoveryVM.currentList
         guard let current = audioManager.currentPodcast,
               let index = list.firstIndex(where: { $0.id == current.id }),
