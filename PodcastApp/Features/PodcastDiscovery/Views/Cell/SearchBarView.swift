@@ -21,20 +21,17 @@ class SearchBarView: UIView {
         super.init(coder: coder)
         commonInit()
     }
-    override func awakeFromNib() {
-            super.awakeFromNib()
-        }
-        
+
         private func commonInit() {
             let bundle = Bundle(for: type(of: self))
             let nib = UINib(nibName: "SearchBarView", bundle: bundle)
-            
+
             // This line connects the XIB to this Swift file
             guard let xibView = nib.instantiate(withOwner: self, options: nil).first as? UIView else { return }
-            
+
             xibView.frame = self.bounds
             xibView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             addSubview(xibView)
-            
+
         }
 }

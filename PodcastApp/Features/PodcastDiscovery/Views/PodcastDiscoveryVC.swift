@@ -68,7 +68,7 @@ extension PodcastDiscoveryVC: TrendingHeaderDelegate {
            let destinationVC = segue.destination as? PodcastListVC,
            let headerTitle = sender as? String {
             destinationVC.hidesBottomBarWhenPushed = false
-            destinationVC.podcasts = (headerTitle == "Trending Podcast") ? (vm?.filteredTrendingPodcasts ?? []) : (vm?.filteredFavouritePodcasts ?? [])
+            destinationVC.podcasts = (headerTitle == "header_trending".localized) ? (vm?.filteredTrendingPodcasts ?? []) : (vm?.filteredFavouritePodcasts ?? [])
         }
     }
 }
@@ -99,14 +99,14 @@ extension PodcastDiscoveryVC: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
         header.delegate = self
-        header.title.text = (indexPath.section == 1) ? "Trending Podcast" : (indexPath.section == 2 ? "Favourite Podcasts" : "")
+        header.title.text = (indexPath.section == 1) ? "header_trending".localized : (indexPath.section == 2 ? "header_favourite".localized : "")
         return header
     }
 }
 
 // MARK: - UICollectionView Delegate
 extension PodcastDiscoveryVC: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         handleSelection(at: indexPath)
     }
 }

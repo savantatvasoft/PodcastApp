@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  PodcastApp
+
+  Created by MACM72 on 20/01/26.
+  
+*/
+
+/* Discovery Screen Headers */
+"header_trending" = "Trending Podcast";
+"header_favourite" = "Favourite Podcasts";
+
+/* Categories (Assuming these match your Enum rawValues) */
+"cat_all" = "All";
+"cat_comedy" = "Comedy";
+"cat_news" = "News";
+"cat_tech" = "Technology";
+/* Add others as per your CategoryType enum */

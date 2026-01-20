@@ -14,7 +14,7 @@ struct PodcastLayoutFactory {
             switch sectionIndex {
                 case 0:
                     return createCategorySection()
-                case 1,2:
+                case 1, 2:
                     return createTrendingSection()
                 default:
                     return nil

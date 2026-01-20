@@ -7,26 +7,22 @@
 
 import UIKit
 
-protocol TrendingHeaderDelegate:AnyObject {
+protocol TrendingHeaderDelegate: AnyObject {
     func didTapTrendingHeaderLeft(for title: String)
 }
 
 class TrendingHeader: UICollectionReusableView {
-    
-    //MARK: Properties
+
+    // MARK: Properties
     static let reuseIdentifier = "TrendingHeader"
     weak var delegate: TrendingHeaderDelegate?
-    
-    //MARK: Outlets
+
+    // MARK: Outlets
     @IBOutlet weak var leftImageView: UIButton!
     @IBOutlet weak var title: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
+
     @IBAction func onPressLeft(_ sender: Any) {
         delegate?.didTapTrendingHeaderLeft(for: title.text ?? "")
     }
-    
+
 }

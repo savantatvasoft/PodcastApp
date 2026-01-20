@@ -8,7 +8,7 @@
 import UIKit
 
 class CategoryCell: UICollectionViewCell {
-    
+
     static let reuseIdentifier = "CategoryCell"
 
     @IBOutlet weak var title: UILabel!
@@ -19,17 +19,17 @@ class CategoryCell: UICollectionViewCell {
         super.awakeFromNib()
         setupUI()
     }
-    
+
     private func setupUI() {
         self.contentView.layer.masksToBounds = true
         self.contentView.backgroundColor = .clear
     }
-    
+
     func configure(text: String, isSelected: Bool) {
         title.text = text.capitalized
         bottomBorder.isHidden = !isSelected
         title.textColor = isSelected ? .systemRed : .systemGray
-     
+
         title.font = UIFont(name: "Avenir-Heavy", size: isSelected ? 15 : 16)
         self.invalidateIntrinsicContentSize()
         self.layoutIfNeeded()

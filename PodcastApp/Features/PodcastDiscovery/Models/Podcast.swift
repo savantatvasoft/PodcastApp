@@ -43,8 +43,6 @@ struct Podcast: Identifiable {
     let views: String
 }
 
-import Foundation
-
 struct MockData {
     static let categories: [PodcastCategory] = CategoryType.allCases.map {
         PodcastCategory(id: UUID().uuidString, type: $0)
